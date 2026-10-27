@@ -14,6 +14,7 @@ urlpatterns = [
     path("horas/", include("horas.urls")),
     path("seguimiento/", include("reportes.urls")),
     path("notificaciones/", include("notificaciones.urls")),
+    path("api/", include("api.urls")),
     path("", InicioView.as_view(), name="inicio"),
 ]
 # Los soportes NO se publican en /media/: se descargan por horas:ver_soporte,
