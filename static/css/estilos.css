@@ -61,7 +61,7 @@ a { color: var(--ucc-azul); }
 .titulo-pagina { font-size: 1.75rem; font-weight: 700; margin: 0; }
 
 /* Estados */
-.estado { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+.estado { display: inline-block; white-space: nowrap; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; }
 .estado-aprobada, .estado-activo, .estado-cumple, .estado-publicada { background: #E3F2E8; color: #14532D; }
 .estado-por_aprobar, .estado-borrador, .estado-en-progreso { background: #FFF4E5; color: #7A4100; }
 .estado-rechazada, .estado-cancelada, .estado-en-riesgo { background: #FDECEC; color: #9B1C1C; }

@@ -81,7 +81,9 @@ class Command(BaseCommand):
 
         # Actividades -----------------------------------------------------------
         def actividad(nombre, tipo, dias, horas, cupo, responsable, lugar, estado=Actividad.Estado.PUBLICADA, hora=8):
-            inicio = (ahora + timedelta(days=dias)).replace(hour=hora, minute=0, second=0, microsecond=0)
+            inicio = (timezone.localtime(ahora) + timedelta(days=dias)).replace(
+                hour=hora, minute=0, second=0, microsecond=0
+            )
             return Actividad.objects.create(
                 nombre=nombre, tipo=tipos[tipo], responsable=responsable, lugar=lugar,
                 fecha_inicio=inicio, fecha_fin=inicio + timedelta(hours=3), cupo=cupo,
