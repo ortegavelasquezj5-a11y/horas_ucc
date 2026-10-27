@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}{% if object %}Editar actividad{% else %}Nueva actividad{% endif %}{% endblock %}
+{% block contenido %}
+<a href="{% url 'actividades:gestion' %}" class="small">← Actividades</a>
+<h1 class="titulo-pagina mt-1">{% if object %}Editar actividad{% else %}Nueva actividad{% endif %}</h1>
+<p class="texto-suave">Los campos con * son obligatorios. Puedes guardarla como borrador y publicarla después.</p>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <form method="post" class="tarjeta p-4" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+      {% include "partials/campo.html" with campo=form.nombre %}
+      <div class="row">
+        <div class="col-md-6">{% include "partials/campo.html" with campo=form.tipo %}</div>
+        <div class="col-md-6">{% include "partials/campo.html" with campo=form.lugar %}</div>
+        <div class="col-md-6">{% include "partials/campo.html" with campo=form.fecha_inicio %}</div>
+        <div class="col-md-6">{% include "partials/campo.html" with campo=form.fecha_fin %}</div>
+        <div class="col-md-6">{% include "partials/campo.html" with campo=form.cupo %}</div>
+        <div class="col-md-6">{% include "partials/campo.html" with campo=form.horas_otorga %}</div>
+      </div>
+      {% include "partials/campo.html" with campo=form.descripcion %}
+      <div class="d-flex flex-wrap gap-2">
+        {% if not object or object.estado == "borrador" %}
+          <button name="accion" value="publicar" class="btn btn-ucc">Publicar actividad</button>
+          <button name="accion" value="guardar" class="btn btn-outline-ucc">Guardar borrador</button>
+        {% else %}
+          <button name="accion" value="guardar" class="btn btn-ucc">Guardar cambios</button>
+        {% endif %}
+        <a href="{% url 'actividades:gestion' %}" class="btn btn-link">Cancelar</a>
+      </div>
+    </form>
+  </div>
+  <div class="col-lg-4">
+    <div class="tarjeta p-4 small">
+      <div class="fw-bold mb-2">Antes de publicar</div>
+      <ul class="ps-3 mb-0">
+        <li>Revisa las horas: no se pueden cambiar si ya hay inscritos.</li>
+        <li>Al publicarla, se avisa a todos los estudiantes.</li>
+        <li>Después de la actividad, registra la asistencia en «Actividades».</li>
+        <li>Si la cancelas, se avisa a todos los inscritos.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

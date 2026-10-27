@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo %}Cargar soporte{% endblock %}
+{% block contenido %}
+<h1 class="titulo-pagina">Cargar soporte de actividad externa</h1>
+<p class="texto-suave">¿Participaste en una actividad fuera de la plataforma? Sube el certificado y Bienestar revisará tus horas.</p>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <form method="post" enctype="multipart/form-data" class="tarjeta p-4" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+      {% include "partials/campo.html" with campo=form.nombre_actividad %}
+      <div class="row">
+        <div class="col-md-4">{% include "partials/campo.html" with campo=form.tipo %}</div>
+        <div class="col-md-4">{% include "partials/campo.html" with campo=form.fecha_actividad %}</div>
+        <div class="col-md-4">{% include "partials/campo.html" with campo=form.horas %}</div>
+      </div>
+      {% include "partials/campo.html" with campo=form.soporte %}
+      <button class="btn btn-ucc">Enviar solicitud</button>
+      <a href="{% url 'horas:mis_horas' %}" class="btn btn-link">Cancelar</a>
+    </form>
+  </div>
+  <div class="col-lg-5">
+    <section class="tarjeta p-4">
+      <h2 class="h5 fw-bold mb-3">Mis solicitudes</h2>
+      {% for s in solicitudes %}
+        <div class="border-bottom pb-2 mb-2">
+          <div class="d-flex justify-content-between gap-2">
+            <span class="fw-semibold">{{ s.nombre_actividad }}</span>
+            <span class="estado estado-{{ s.estado }}">{{ s.get_estado_display }}</span>
+          </div>
+          <div class="small texto-suave">{{ s.horas|floatformat:"-1" }} h · enviada el {{ s.fecha_solicitud|date:"d/m/Y" }}
+            {% if s.soporte %}· <a href="{% url 'horas:ver_soporte' s.pk %}">ver soporte</a>{% endif %}</div>
+          {% if s.motivo %}<div class="small {% if s.estado == 'rechazada' %}text-danger{% endif %}">Motivo: {{ s.motivo }}</div>{% endif %}
+        </div>
+      {% empty %}
+        <p class="texto-suave">Aún no has enviado soportes.</p>
+      {% endfor %}
+      <div class="rounded-3 p-3 small" style="background:#EAF1F8; color:#003865">El soporte debe mostrar tu nombre, la fecha y la intensidad horaria. Solo las horas aprobadas suman a tu acumulado.</div>
+    </section>
+  </div>
+</div>
+{% endblock %}

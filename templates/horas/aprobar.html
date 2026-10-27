@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block titulo %}Aprobar horas{% endblock %}
+{% block contenido %}
+<h1 class="titulo-pagina">Aprobar horas</h1>
+<p class="texto-suave">Revisa la asistencia registrada y los soportes externos. Solo las horas aprobadas suman al acumulado del estudiante.</p>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <section class="tarjeta p-3">
+      <h2 class="h5 fw-bold px-1">Pendientes por aprobar ({{ pendientes|length }})</h2>
+      <div class="d-flex flex-column gap-2">
+      {% for p in pendientes %}
+        <a href="?id={{ p.pk }}" class="text-decoration-none text-reset rounded-3 p-3 d-flex flex-wrap justify-content-between align-items-center gap-2 {% if p == seleccionado %}border border-2 border-primary bg-primary-subtle{% else %}border{% endif %}">
+          <span>
+            <span class="fw-bold d-block">{{ p.estudiante.nombre_completo }}</span>
+            <span class="small texto-suave">{{ p.nombre_actividad }} · {{ p.fecha_actividad|date:"d/m/Y" }}</span>
+          </span>
+          <span class="d-flex align-items-center gap-2">
+            <span class="etiqueta-tipo">{% if p.es_externa %}Soporte externo{% else %}Asistencia{% endif %}</span>
+            <span class="fw-bold fs-5">{{ p.horas|floatformat:"-1" }} h</span>
+          </span>
+        </a>
+      {% empty %}
+        <p class="text-center texto-suave py-4 mb-0">No hay solicitudes pendientes.</p>
+      {% endfor %}
+      </div>
+    </section>
+  </div>
+  <div class="col-lg-5">
+    {% if seleccionado %}
+    <section class="tarjeta p-4">
+      <h2 class="h5 fw-bold">Detalle de la solicitud</h2>
+      <dl class="row small mb-3">
+        <dt class="col-5 texto-suave fw-normal">Estudiante</dt><dd class="col-7 fw-semibold">{{ seleccionado.estudiante.nombre_completo }}</dd>
+        <dt class="col-5 texto-suave fw-normal">Código</dt><dd class="col-7">{{ seleccionado.estudiante.codigo }}</dd>
+        <dt class="col-5 texto-suave fw-normal">Programa</dt><dd class="col-7">{{ seleccionado.estudiante.programa|default:"—" }}</dd>
+        <dt class="col-5 texto-suave fw-normal">Actividad</dt><dd class="col-7">{{ seleccionado.nombre_actividad }}</dd>
+        <dt class="col-5 texto-suave fw-normal">Tipo</dt><dd class="col-7">{{ seleccionado.tipo }}</dd>
+        <dt class="col-5 texto-suave fw-normal">Horas solicitadas</dt><dd class="col-7 fw-bold">{{ seleccionado.horas|floatformat:"-1" }} h</dd>
+      </dl>
+      <div class="border rounded-3 p-3 mb-3 small bg-light">
+        {% if seleccionado.es_externa %}
+          {% if seleccionado.soporte %}<a href="{% url 'horas:ver_soporte' seleccionado.pk %}" target="_blank" class="fw-semibold">Ver soporte</a>{% else %}Sin soporte{% endif %}
+        {% else %}
+          Asistencia registrada por {{ seleccionado.inscripcion.actividad.responsable.nombre_completo }}
+        {% endif %}
+      </div>
+      <form method="post" action="{% url 'horas:revisar' seleccionado.pk %}" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="alert alert-danger py-2">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+        {% include "partials/campo.html" with campo=form.horas %}
+        {% include "partials/campo.html" with campo=form.motivo %}
+        <div class="d-flex gap-2">
+          <button name="accion" value="aprobar" class="btn btn-ucc flex-fill">Aprobar</button>
+          <button name="accion" value="rechazar" class="btn btn-outline-danger flex-fill">Rechazar</button>
+        </div>
+        <p class="small texto-suave mt-2 mb-0">Cada decisión queda registrada con fecha y responsable.</p>
+      </form>
+    </section>
+    {% endif %}
+    {% if revisadas %}
+    <section class="tarjeta p-4 mt-4">
+      <h2 class="h6 fw-bold">Últimas revisadas</h2>
+      {% for r in revisadas %}
+        <div class="small d-flex justify-content-between gap-2 border-bottom py-1">
+          <span>{{ r.estudiante.nombre_completo }} · {{ r.nombre_actividad }}</span>
+          <span class="estado estado-{{ r.estado }} text-nowrap">{{ r.get_estado_display }}</span>
+        </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}Programas{% endblock %}
+{% block contenido %}
+<h1 class="titulo-pagina">Programas y meta de horas</h1>
+<p class="texto-suave">La meta de cada programa es la que ve el estudiante en «Mis horas».</p>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="tarjeta p-2 p-md-3">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead><tr><th>Programa</th><th>Meta</th><th>Estudiantes</th><th class="text-end">Acciones</th></tr></thead>
+          <tbody>
+          {% for p in object_list %}
+            <tr>
+              <td class="fw-semibold">{{ p.nombre }}</td>
+              <td>{{ p.meta_horas }} h</td>
+              <td>{{ p.estudiantes }}</td>
+              <td class="text-end"><a href="{% url 'usuarios:programa_editar' p.pk %}" class="btn btn-sm btn-outline-secondary">Editar</a></td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4" class="text-center texto-suave py-4">Aún no hay programas.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <form method="post" class="tarjeta p-4" novalidate>
+      {% csrf_token %}
+      <h2 class="h5 fw-bold mb-3">Nuevo programa</h2>
+      {% include "partials/campo.html" with campo=form.nombre %}
+      {% include "partials/campo.html" with campo=form.meta_horas %}
+      <button class="btn btn-ucc">Crear programa</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

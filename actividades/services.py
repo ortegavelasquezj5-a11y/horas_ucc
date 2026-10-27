@@ -3,6 +3,8 @@
 Las vistas web y la API llaman estas funciones: ninguna regla vive en las
 vistas ni en las plantillas.
 """
+from decimal import Decimal
+
 from django.db import transaction
 from django.utils import timezone
 
@@ -24,8 +26,10 @@ def puede_gestionar(usuario, actividad):
     return usuario.rol in (Rol.BIENESTAR, Rol.ADMIN) or actividad.responsable_id == usuario.id
 
 
-def _texto_horas(horas):
-    return f"{horas:g} h"
+def texto_horas(horas):
+    """4.0 → '4 h' · 2.5 → '2,5 h'."""
+    numero = f"{Decimal(str(horas)).normalize():f}"
+    return numero.replace(".", ",") + " h"
 
 
 def publicar(actividad, usuario):
@@ -42,7 +46,7 @@ def publicar(actividad, usuario):
     notificar_a_varios(
         Usuario.objects.filter(rol=Rol.ESTUDIANTE, is_active=True),
         f"Nueva actividad: «{actividad.nombre}» · {actividad.tipo} · "
-        f"{_texto_horas(actividad.horas_otorga)} · {fecha}.",
+        f"{texto_horas(actividad.horas_otorga)} · {fecha}.",
     )
     return actividad
 
@@ -147,7 +151,7 @@ def registrar_asistencia(actividad, usuario, ids_presentes):
                 notificar(
                     inscripcion.estudiante,
                     f"Se registró tu asistencia a «{actividad.nombre}». "
-                    f"Tus {_texto_horas(actividad.horas_otorga)} quedaron por aprobar.",
+                    f"Tus {texto_horas(actividad.horas_otorga)} quedaron por aprobar.",
                 )
         elif registro:
             registro.delete()

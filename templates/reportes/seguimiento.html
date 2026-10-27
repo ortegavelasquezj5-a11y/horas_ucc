@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block titulo %}Seguimiento{% endblock %}
+{% block contenido %}
+<h1 class="titulo-pagina">Seguimiento{% if programa %} · {{ programa.nombre }}{% endif %}</h1>
+<p class="texto-suave">{% if programa %}Meta del programa: {{ programa.meta_horas }} h. {% endif %}«En riesgo» = semestre {{ semestre_riesgo }} o superior sin cumplir la meta.</p>
+
+<div class="row g-3 mb-3">
+  {% for clave, texto, total in resumen %}
+  <div class="col-sm-4">
+    <div class="tarjeta p-3">
+      <div class="small texto-suave">{{ texto }}</div>
+      <div class="fs-3 fw-bold"><span class="estado estado-{{ clave }} fs-5">{{ total }}</span></div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<form method="get" class="d-flex flex-wrap gap-2 mb-3">
+  {% if programas %}
+  <select name="programa" class="form-select" style="max-width: 260px" aria-label="Programa">
+    <option value="">Todos los programas</option>
+    {% for p in programas %}<option value="{{ p.pk }}" {% if programa == p %}selected{% endif %}>{{ p.nombre }}</option>{% endfor %}
+  </select>
+  {% endif %}
+  <select name="semestre" class="form-select" style="max-width: 200px" aria-label="Semestre">
+    <option value="">Todos los semestres</option>
+    {% for s in semestres %}<option value="{{ s }}" {% if semestre == s|stringformat:'s' %}selected{% endif %}>{{ s }}.º semestre</option>{% endfor %}
+  </select>
+  <select name="estado" class="form-select" style="max-width: 200px" aria-label="Estado">
+    <option value="">Todos los estados</option>
+    {% for clave, texto in estados.items %}<option value="{{ clave }}" {% if estado == clave %}selected{% endif %}>{{ texto }}</option>{% endfor %}
+  </select>
+  <button class="btn btn-outline-secondary">Filtrar</button>
+</form>
+
+<div class="tarjeta p-2 p-md-3">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Código</th><th>Estudiante</th>{% if not programa %}<th>Programa</th>{% endif %}<th>Semestre</th><th style="width: 30%">Horas aprobadas</th><th>Estado</th></tr></thead>
+      <tbody>
+      {% for f in filas %}
+        <tr>
+          <td>{{ f.estudiante.codigo }}</td>
+          <td class="fw-semibold">{{ f.estudiante.nombre_completo }}</td>
+          {% if not programa %}<td>{{ f.estudiante.programa }}</td>{% endif %}
+          <td>{{ f.estudiante.semestre }}.º</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height: 10px"><div class="progress-bar" style="width: {{ f.porcentaje }}%"></div></div>
+              <span class="fw-semibold text-nowrap">{{ f.horas|floatformat:"-1" }} / {{ f.meta }}</span>
+            </div>
+          </td>
+          <td><span class="estado estado-{{ f.estado }}">{{ f.estado_texto }}</span></td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6" class="text-center texto-suave py-4">No hay estudiantes con esos filtros.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<p class="small texto-suave mt-2">Exportar a Excel se agrega en la Semana 4, junto con el dashboard y los reportes.</p>
+{% endblock %}

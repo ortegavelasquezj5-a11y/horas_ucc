@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titulo %}{% if object %}Editar usuario{% else %}Nuevo usuario{% endif %}{% endblock %}
+{% block contenido %}
+<a href="{% url 'usuarios:lista' %}" class="small">← Usuarios</a>
+<h1 class="titulo-pagina mt-1 mb-3">{% if object %}Editar a {{ object.nombre_completo }}{% else %}Nuevo usuario{% endif %}</h1>
+<form method="post" class="tarjeta p-4" style="max-width: 760px" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  <div class="row">
+    <div class="col-md-4">{% include "partials/campo.html" with campo=form.codigo %}</div>
+    <div class="col-md-8">{% include "partials/campo.html" with campo=form.correo %}</div>
+    <div class="col-md-6">{% include "partials/campo.html" with campo=form.nombres %}</div>
+    <div class="col-md-6">{% include "partials/campo.html" with campo=form.apellidos %}</div>
+    <div class="col-md-4">{% include "partials/campo.html" with campo=form.rol %}</div>
+    <div class="col-md-5">{% include "partials/campo.html" with campo=form.programa %}</div>
+    <div class="col-md-3">{% include "partials/campo.html" with campo=form.semestre %}</div>
+    <div class="col-md-6">{% include "partials/campo.html" with campo=form.clave %}</div>
+  </div>
+  <p class="small texto-suave">El programa es obligatorio para estudiantes y coordinadores; el semestre, solo para estudiantes.</p>
+  <button class="btn btn-ucc">Guardar</button>
+  <a href="{% url 'usuarios:lista' %}" class="btn btn-link">Cancelar</a>
+</form>
+{% endblock %}

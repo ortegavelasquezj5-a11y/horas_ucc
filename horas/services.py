@@ -8,7 +8,7 @@ from django.db.models import DecimalField, Q, Sum, Value
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 
-from actividades.services import ReglaDeNegocioError
+from actividades.services import ReglaDeNegocioError, texto_horas
 from notificaciones.services import notificar
 from usuarios.models import Usuario
 
@@ -94,7 +94,7 @@ def aprobar(registro, revisor, horas=None, motivo=""):
     registro.save()
     notificar(
         registro.estudiante,
-        f"Bienestar aprobó {registro.horas:g} h de «{registro.nombre_actividad}». "
+        f"Bienestar aprobó {texto_horas(registro.horas)} de «{registro.nombre_actividad}». "
         "Ya suman a tu acumulado.",
     )
     return registro

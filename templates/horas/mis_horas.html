@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block titulo %}Mis horas{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+  <div>
+    <h1 class="titulo-pagina">Mis horas</h1>
+    <p class="texto-suave mb-0">Así vas con el requisito de horas de bienestar para tu grado.</p>
+  </div>
+  <button class="btn btn-ucc" disabled title="Disponible en la Semana 4">Descargar constancia (PDF)</button>
+</div>
+
+<section class="tarjeta p-4 mb-4">
+  <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
+    <span class="fw-bold fs-5">Progreso hacia la meta</span>
+    <span class="texto-suave">Meta de {{ user.programa }}: {{ resumen.meta }} h · <span class="estado estado-{{ resumen.estado }}">{{ resumen.estado_texto }}</span></span>
+  </div>
+  <div class="d-flex align-items-baseline gap-2 mb-3">
+    <span class="cifra">{{ resumen.aprobadas|floatformat:"-1" }}</span>
+    <span class="fs-5 texto-suave">de {{ resumen.meta }} horas aprobadas</span>
+  </div>
+  <div class="progress mb-3" role="progressbar" aria-label="Progreso hacia la meta" aria-valuenow="{{ resumen.porcentaje }}" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-bar" style="width: {{ resumen.porcentaje }}%"></div>
+  </div>
+  <div class="row g-2">
+    <div class="col-4"><div class="rounded-3 p-3" style="background:#EEF6F1"><div class="small" style="color:#1E5C38">Aprobadas</div><div class="fs-4 fw-bold" style="color:#14532D">{{ resumen.aprobadas|floatformat:"-1" }} h</div></div></div>
+    <div class="col-4"><div class="rounded-3 p-3" style="background:#FFF4E5"><div class="small" style="color:#8A4B00">Por aprobar</div><div class="fs-4 fw-bold" style="color:#7A4100">{{ resumen.por_aprobar|floatformat:"-1" }} h</div></div></div>
+    <div class="col-4"><div class="rounded-3 p-3" style="background:#EAF1F8"><div class="small" style="color:#003865">Te faltan</div><div class="fs-4 fw-bold" style="color:#003865">{{ resumen.faltan|floatformat:"-1" }} h</div></div></div>
+  </div>
+</section>
+
+<div class="row g-4">
+  <div class="col-lg-4">
+    <section class="tarjeta p-4 h-100">
+      <h2 class="h5 fw-bold mb-3">Horas por tipo de actividad</h2>
+      {% for t in resumen.por_tipo %}
+        <div class="mb-3">
+          <div class="d-flex justify-content-between small"><span>{{ t.nombre }}</span><span class="fw-semibold">{{ t.horas|floatformat:"-1" }} h</span></div>
+          <div class="progress" style="height: 10px"><div class="progress-bar" style="width: {{ t.ancho }}%; background: var(--ucc-azul)"></div></div>
+        </div>
+      {% empty %}
+        <p class="texto-suave mb-0">Aún no tienes horas aprobadas.</p>
+      {% endfor %}
+    </section>
+  </div>
+  <div class="col-lg-8">
+    <section class="tarjeta p-3 p-md-4 h-100">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+        <h2 class="h5 fw-bold mb-0">Historial de actividades</h2>
+        <form method="get">
+          <select name="tipo" class="form-select form-select-sm" aria-label="Filtrar por tipo" onchange="this.form.submit()">
+            <option value="">Todos los tipos</option>
+            {% for t in tipos %}<option value="{{ t.pk }}" {% if tipo == t.pk|stringformat:'s' %}selected{% endif %}>{{ t.nombre }}</option>{% endfor %}
+          </select>
+        </form>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead><tr><th>Actividad</th><th>Tipo</th><th>Fecha</th><th>Horas</th><th>Estado</th></tr></thead>
+          <tbody>
+          {% for h in historial %}
+            <tr>
+              <td>
+                <div class="fw-semibold">{{ h.actividad }}{% if h.externa %} <span class="small texto-suave">(externa)</span>{% endif %}</div>
+                {% if h.motivo %}<div class="small {% if h.estado == 'rechazada' %}text-danger{% else %}texto-suave{% endif %}">Motivo: {{ h.motivo }}</div>{% endif %}
+              </td>
+              <td>{{ h.tipo }}</td>
+              <td class="text-nowrap">{{ h.fecha|date:"d/m/Y" }}</td>
+              <td>{{ h.horas|floatformat:"-1" }} h</td>
+              <td><span class="estado estado-{{ h.estado }}">{{ h.estado_texto }}</span></td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="text-center texto-suave py-4">Todavía no tienes actividades. Inscríbete en «Actividades».</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}
