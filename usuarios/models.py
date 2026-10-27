@@ -32,6 +32,10 @@ class UsuarioManager(BaseUserManager):
         usuario.save(using=self._db)
         return usuario
 
+    def get_by_natural_key(self, correo):
+        """El login no distingue mayúsculas en el correo."""
+        return self.get(correo__iexact=correo)
+
     def create_superuser(self, correo, password=None, **campos):
         campos.setdefault("rol", Usuario.Rol.ADMIN)
         campos.setdefault("is_superuser", True)

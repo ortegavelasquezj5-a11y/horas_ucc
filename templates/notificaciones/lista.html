@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titulo %}Notificaciones{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+  <div>
+    <h1 class="titulo-pagina">Notificaciones</h1>
+    <p class="texto-suave mb-0">{% if notificaciones_sin_leer %}Tienes {{ notificaciones_sin_leer }} sin leer.{% else %}Estás al día.{% endif %}</p>
+  </div>
+  {% if notificaciones_sin_leer %}
+  <form method="post" action="{% url 'notificaciones:todas_leidas' %}">
+    {% csrf_token %}
+    <button class="btn btn-outline-ucc">Marcar todas como leídas</button>
+  </form>
+  {% endif %}
+</div>
+<div class="d-flex gap-2 mb-3">
+  <a href="?" class="btn btn-sm rounded-pill {% if not filtro %}btn-primary{% else %}btn-outline-secondary{% endif %}">Todas</a>
+  <a href="?filtro=sin_leer" class="btn btn-sm rounded-pill {% if filtro == 'sin_leer' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Sin leer</a>
+</div>
+<div class="tarjeta overflow-hidden" style="max-width: 900px">
+  {% for n in object_list %}
+    <div class="d-flex justify-content-between gap-3 p-3 border-bottom {% if not n.leida %}notificacion-nueva{% endif %}">
+      <div>
+        <div class="mensaje">{{ n.mensaje }}</div>
+        <div class="small texto-suave">{{ n.fecha|date:"d/m/Y H:i" }}</div>
+      </div>
+      {% if not n.leida %}
+      <form method="post" action="{% url 'notificaciones:leida' n.pk %}">
+        {% csrf_token %}
+        <button class="btn btn-sm btn-link text-nowrap">Marcar como leída</button>
+      </form>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p class="p-4 text-center texto-suave mb-0">No tienes notificaciones.</p>
+  {% endfor %}
+</div>
+{% include "partials/paginacion.html" %}
+{% endblock %}

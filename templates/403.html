@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}Acceso denegado{% endblock %}
+{% block contenido %}
+<div class="tarjeta p-5 text-center mx-auto" style="max-width: 560px">
+  <h1 class="titulo-pagina mb-2">Acceso denegado</h1>
+  <p class="texto-suave">Tu rol no tiene permiso para ver esta página.</p>
+  <a href="{% url 'inicio' %}" class="btn btn-ucc">Volver al inicio</a>
+</div>
+{% endblock %}
+{% block publico %}
+<div class="container py-5 text-center">
+  <h1>Acceso denegado</h1>
+  <a href="{% url 'login' %}">Iniciar sesión</a>
+</div>
+{% endblock %}

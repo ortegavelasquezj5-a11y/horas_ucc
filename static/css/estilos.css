@@ -1,0 +1,84 @@
+/* Colores y estilos del prototipo (Semana 2) */
+:root {
+  --ucc-azul: #003865;
+  --ucc-azul-oscuro: #00264a;
+  --ucc-verde: #00843D;
+  --ucc-verde-oscuro: #006b31;
+  --fondo: #F4F6F9;
+  --borde: #DDE3EA;
+  --texto: #1B2430;
+  --texto-suave: #5A6675;
+}
+
+body {
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+
+a { color: var(--ucc-azul); }
+
+/* Barra lateral (computador) y barra superior (celular) */
+.barra-lateral {
+  background: var(--ucc-azul);
+  color: #fff;
+  width: 250px;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+}
+.barra-lateral .nav-link,
+.offcanvas-menu .nav-link {
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.barra-lateral .nav-link:hover,
+.offcanvas-menu .nav-link:hover { background: rgba(255, 255, 255, 0.10); }
+.barra-lateral .nav-link.activo,
+.offcanvas-menu .nav-link.activo { background: rgba(255, 255, 255, 0.16); font-weight: 600; }
+.rol-titulo { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #C9D6E3; }
+.logo {
+  width: 36px; height: 36px; border-radius: 8px; background: var(--ucc-verde);
+  display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: #fff;
+}
+.barra-superior { background: var(--ucc-azul); }
+.offcanvas-menu { background: var(--ucc-azul); color: #fff; }
+
+.contador {
+  background: var(--ucc-verde); color: #fff; border-radius: 999px;
+  font-size: 12px; min-width: 22px; padding: 1px 7px; text-align: center;
+}
+
+/* Tarjetas y botones */
+.tarjeta { background: #fff; border: 1px solid var(--borde); border-radius: 14px; }
+.btn-ucc { background: var(--ucc-verde); color: #fff; font-weight: 600; }
+.btn-ucc:hover, .btn-ucc:focus { background: var(--ucc-verde-oscuro); color: #fff; }
+.btn-outline-ucc { border: 1px solid var(--ucc-azul); color: var(--ucc-azul); font-weight: 600; }
+.btn-outline-ucc:hover { background: var(--ucc-azul); color: #fff; }
+
+.texto-suave { color: var(--texto-suave); }
+.titulo-pagina { font-size: 1.75rem; font-weight: 700; margin: 0; }
+
+/* Estados */
+.estado { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+.estado-aprobada, .estado-activo, .estado-cumple, .estado-publicada { background: #E3F2E8; color: #14532D; }
+.estado-por_aprobar, .estado-borrador, .estado-en-progreso { background: #FFF4E5; color: #7A4100; }
+.estado-rechazada, .estado-cancelada, .estado-en-riesgo { background: #FDECEC; color: #9B1C1C; }
+.estado-inscrito, .estado-finalizada { background: #EAF1F8; color: var(--ucc-azul); }
+.estado-cancelado, .estado-inactivo { background: #F0F2F5; color: #3B4552; }
+
+.cifra { font-size: 2.6rem; font-weight: 700; line-height: 1; color: var(--ucc-azul); }
+.progress { height: 14px; border-radius: 999px; }
+.progress-bar { background: var(--ucc-verde); }
+
+.etiqueta-tipo { background: #EAF1F8; color: var(--ucc-azul); border-radius: 999px; padding: 3px 10px; font-size: 13px; font-weight: 600; }
+.horas-actividad { font-size: 1.35rem; font-weight: 700; color: var(--ucc-verde); }
+
+.notificacion-nueva { background: #F5F9FD; }
+.notificacion-nueva .mensaje { font-weight: 600; }
+
+/* Login */
+.login-izquierda { background: var(--ucc-azul); color: #fff; }
+
+table.table th { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--texto-suave); }

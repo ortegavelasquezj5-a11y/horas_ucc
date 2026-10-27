@@ -1,0 +1,22 @@
+<div class="d-flex align-items-center gap-2 mb-4 px-2">
+  <span class="logo">H</span><span class="fw-bold fs-5">Horas UCC</span>
+</div>
+<span class="rol-titulo px-2 mb-2">{{ user.get_rol_display }}</span>
+<nav class="nav flex-column gap-1">
+  {% for texto, url in menu_lateral %}
+    <a class="nav-link d-flex justify-content-between align-items-center {% if request.path == url %}activo{% endif %}" href="{{ url }}">
+      <span>{{ texto }}</span>
+      {% if texto == "Notificaciones" and notificaciones_sin_leer %}<span class="contador">{{ notificaciones_sin_leer }}</span>{% endif %}
+    </a>
+  {% endfor %}
+</nav>
+<div class="mt-auto pt-3 border-top border-light border-opacity-25 px-2">
+  <div class="fw-semibold">{{ user.nombre_completo }}</div>
+  <div class="small" style="color:#C9D6E3">
+    {% if user.programa %}{{ user.programa }}{% if user.semestre %} · {{ user.semestre }}.º semestre{% endif %}{% else %}{{ user.correo }}{% endif %}
+  </div>
+  <form method="post" action="{% url 'logout' %}" class="mt-2">
+    {% csrf_token %}
+    <button class="btn btn-sm btn-outline-light">Cerrar sesión</button>
+  </form>
+</div>

@@ -1,0 +1,49 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Horas UCC{% endblock %} · Horas UCC</title>
+  <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/estilos.css' %}" rel="stylesheet">
+</head>
+<body>
+{% if user.is_authenticated %}
+<div class="d-flex">
+  {# Menú lateral: visible en computador (lg o más) #}
+  <aside class="barra-lateral d-none d-lg-flex flex-column p-3 flex-shrink-0">
+    {% include "partials/menu.html" %}
+  </aside>
+
+  <div class="flex-grow-1 min-vw-0" style="min-width: 0">
+    {# Barra superior: solo en celular y tableta #}
+    <nav class="navbar barra-superior d-lg-none px-3">
+      <a class="navbar-brand text-white fw-bold d-flex align-items-center gap-2" href="{% url 'inicio' %}">
+        <span class="logo">H</span> Horas UCC
+      </a>
+      <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuMovil" aria-controls="menuMovil">
+        Menú{% if notificaciones_sin_leer %} <span class="contador">{{ notificaciones_sin_leer }}</span>{% endif %}
+      </button>
+    </nav>
+    <div class="offcanvas offcanvas-start offcanvas-menu" tabindex="-1" id="menuMovil" aria-label="Menú">
+      <div class="offcanvas-header">
+        <span class="fw-bold">Menú</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column">
+        {% include "partials/menu.html" %}
+      </div>
+    </div>
+
+    <main class="p-3 p-md-4">
+      {% include "partials/mensajes.html" %}
+      {% block contenido %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% else %}
+  {% block publico %}{% endblock %}
+{% endif %}
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

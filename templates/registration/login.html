@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo %}Iniciar sesión{% endblock %}
+{% block publico %}
+<div class="container-fluid">
+  <div class="row min-vh-100">
+    <section class="col-lg-6 login-izquierda d-flex flex-column justify-content-between p-4 p-md-5">
+      <div class="d-flex align-items-center gap-2">
+        <span class="logo">H</span>
+        <div>
+          <div class="fw-bold fs-5">Horas UCC</div>
+          <div class="small" style="color:#C9D6E3">Universidad Cooperativa de Colombia</div>
+        </div>
+      </div>
+      <div class="my-4" style="max-width: 460px">
+        <h1 class="fw-bold" style="font-size: clamp(1.8rem, 4vw, 2.5rem)">Tus horas de bienestar, claras y en un solo lugar.</h1>
+        <p class="fs-5 mb-0" style="color:#DCE5EE">Inscríbete en actividades, carga tus soportes y consulta cuántas horas llevas y cuántas te faltan.</p>
+      </div>
+      <div class="small d-none d-lg-block" style="color:#C9D6E3">Bienestar universitario · Campus Montería</div>
+    </section>
+    <section class="col-lg-6 d-flex align-items-center justify-content-center p-4">
+      <form method="post" class="tarjeta p-4 p-md-5 w-100" style="max-width: 420px" novalidate>
+        {% csrf_token %}
+        <h2 class="fw-bold mb-1">Iniciar sesión</h2>
+        <p class="texto-suave mb-4">Usa tu correo institucional.</p>
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger py-2">Correo o contraseña incorrectos. Inténtalo de nuevo.</div>
+        {% endif %}
+        <div class="mb-3">
+          <label for="id_username" class="form-label fw-semibold">Correo institucional</label>
+          <input type="email" name="username" id="id_username" class="form-control form-control-lg" value="{{ form.username.value|default:'' }}" placeholder="nombre.apellido@campusucc.edu.co" required autofocus>
+        </div>
+        <div class="mb-4">
+          <label for="id_password" class="form-label fw-semibold">Contraseña</label>
+          <input type="password" name="password" id="id_password" class="form-control form-control-lg" required>
+        </div>
+        <input type="hidden" name="next" value="{{ next }}">
+        <button class="btn btn-ucc btn-lg w-100">Ingresar</button>
+      </form>
+    </section>
+  </div>
+</div>
+{% endblock %}
