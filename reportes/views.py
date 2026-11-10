@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.views.generic import TemplateView
 
 from horas import services
@@ -54,17 +55,27 @@ class SeguimientoView(SeguimientoMixin, TemplateView):
         semestre = get.get("semestre", "")
         filas = services.seguimiento(programa=programa, semestre=int(semestre) if semestre.isdigit() else None)
         conteo = {clave: sum(1 for f in filas if f["estado"] == clave) for clave in services.ESTADOS_CUMPLIMIENTO}
+        q = get.get("q", "").strip().lower()
+        if q:
+            filas = [f for f in filas if q in f["estudiante"].nombre_completo.lower() or q in f["estudiante"].codigo.lower()]
         estado = get.get("estado", "")
         if estado in services.ESTADOS_CUMPLIMIENTO:
             filas = [f for f in filas if f["estado"] == estado]
 
+        # Paginación: 15 estudiantes por página, conservando los filtros en la URL
+        pagina = Paginator(filas, 15).get_page(get.get("page"))
         contexto.update(
-            filas=filas,
+            filas=pagina.object_list,
+            page_obj=pagina,
+            paginator=pagina.paginator,
+            is_paginated=pagina.has_other_pages(),
+            total_filas=len(filas),
             programa=programa,
             programas=programas,
             semestre=semestre,
             semestres=range(1, 11),
             estado=estado,
+            q=get.get("q", "").strip(),
             estados=services.ESTADOS_CUMPLIMIENTO,
             resumen=[(clave, services.ESTADOS_CUMPLIMIENTO[clave], conteo[clave]) for clave in services.ESTADOS_CUMPLIMIENTO],
             semestre_riesgo=services.SEMESTRE_RIESGO,

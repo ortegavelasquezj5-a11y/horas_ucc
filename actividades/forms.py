@@ -14,7 +14,7 @@ class ActividadForm(BootstrapFormMixin, forms.ModelForm):
         fields = ["nombre", "tipo", "lugar", "fecha_inicio", "fecha_fin", "cupo", "horas_otorga", "descripcion"]
         widgets = {
             "fecha_inicio": forms.DateTimeInput(attrs={"type": "datetime-local"}, format=FORMATO_FECHA_HORA),
-            "fecha_fin": forms.DateTimeInput(attrs={"type": "datetime-local"}, format=FORMATO_FECHA_HORA),
+            "fecha_fin": forms.DateTimeInput(attrs={"type": "datetime-local", "data-despues-de": "id_fecha_inicio"}, format=FORMATO_FECHA_HORA),
             "cupo": forms.NumberInput(attrs={"min": 1}),
             "horas_otorga": forms.NumberInput(attrs={"min": "0.5", "step": "0.5"}),
             "descripcion": forms.Textarea(attrs={"rows": 3}),

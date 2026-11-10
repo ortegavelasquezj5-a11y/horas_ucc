@@ -3,7 +3,7 @@
 {% block contenido %}
 <a href="{% url 'usuarios:programas' %}" class="small">← Programas</a>
 <h1 class="titulo-pagina mt-1 mb-3">Editar {{ object.nombre }}</h1>
-<form method="post" class="tarjeta p-4" style="max-width: 520px" novalidate>
+<form method="post" class="tarjeta p-4" style="max-width: 520px" novalidate data-validar>
   {% csrf_token %}
   {% include "partials/campo.html" with campo=form.nombre %}
   {% include "partials/campo.html" with campo=form.meta_horas %}

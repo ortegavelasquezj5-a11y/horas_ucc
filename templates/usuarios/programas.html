@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="col-lg-5">
-    <form method="post" class="tarjeta p-4" novalidate>
+    <form method="post" class="tarjeta p-4" novalidate data-validar>
       {% csrf_token %}
       <h2 class="h5 fw-bold mb-3">Nuevo programa</h2>
       {% include "partials/campo.html" with campo=form.nombre %}

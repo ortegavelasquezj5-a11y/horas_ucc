@@ -1,0 +1,18 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Error del servidor · Horas UCC</title>
+  <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/estilos.css' %}" rel="stylesheet">
+</head>
+<body class="d-flex align-items-center justify-content-center" style="min-height: 100vh">
+  <div class="tarjeta p-5 text-center" style="max-width: 560px">
+    <div class="indicador mb-2" style="font-size: 4rem">500</div>
+    <h1 class="titulo-pagina mb-2">Algo salió mal</h1>
+    <p class="texto-suave">Tuvimos un problema al procesar tu solicitud. Intenta de nuevo en un momento.</p>
+    <a href="/" class="btn btn-ucc">Volver al inicio</a>
+  </div>
+</body>
+</html>

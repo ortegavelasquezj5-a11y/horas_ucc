@@ -6,7 +6,7 @@
 <p class="texto-suave">Los campos con * son obligatorios. Puedes guardarla como borrador y publicarla después.</p>
 <div class="row g-4">
   <div class="col-lg-8">
-    <form method="post" class="tarjeta p-4" novalidate>
+    <form method="post" class="tarjeta p-4" novalidate data-validar>
       {% csrf_token %}
       {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors|join:" " }}</div>{% endif %}
       {% include "partials/campo.html" with campo=form.nombre %}

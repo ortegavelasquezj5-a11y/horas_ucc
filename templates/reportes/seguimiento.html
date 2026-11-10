@@ -17,19 +17,20 @@
 
 <form method="get" class="d-flex flex-wrap gap-2 mb-3">
   {% if programas %}
-  <select name="programa" class="form-select" style="max-width: 260px" aria-label="Programa">
+  <select name="programa" data-autoenviar class="form-select" style="max-width: 260px" aria-label="Programa">
     <option value="">Todos los programas</option>
     {% for p in programas %}<option value="{{ p.pk }}" {% if programa == p %}selected{% endif %}>{{ p.nombre }}</option>{% endfor %}
   </select>
   {% endif %}
-  <select name="semestre" class="form-select" style="max-width: 200px" aria-label="Semestre">
+  <select name="semestre" data-autoenviar class="form-select" style="max-width: 200px" aria-label="Semestre">
     <option value="">Todos los semestres</option>
     {% for s in semestres %}<option value="{{ s }}" {% if semestre == s|stringformat:'s' %}selected{% endif %}>{{ s }}.º semestre</option>{% endfor %}
   </select>
-  <select name="estado" class="form-select" style="max-width: 200px" aria-label="Estado">
+  <select name="estado" data-autoenviar class="form-select" style="max-width: 200px" aria-label="Estado">
     <option value="">Todos los estados</option>
     {% for clave, texto in estados.items %}<option value="{{ clave }}" {% if estado == clave %}selected{% endif %}>{{ texto }}</option>{% endfor %}
   </select>
+  <input type="search" name="q" value="{{ q }}" class="form-control" style="max-width: 240px" placeholder="Buscar nombre o código" aria-label="Buscar estudiante" data-buscar-auto>
   <button class="btn btn-outline-secondary">Filtrar</button>
     <a href="{% url 'reportes:excel' %}?{{ request.GET.urlencode }}" class="btn btn-ucc ms-md-auto">Exportar a Excel</a>
 </form>
@@ -60,5 +61,7 @@
     </table>
   </div>
 </div>
+<p class="small texto-suave mt-2 mb-0">{{ total_filas }} estudiante{{ total_filas|pluralize }} con estos filtros.</p>
+{% include "partials/paginacion.html" %}
 
 {% endblock %}

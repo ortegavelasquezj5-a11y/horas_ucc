@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Página no encontrada{% endblock %}
+{% block contenido %}
+<div class="tarjeta p-5 text-center mx-auto" style="max-width: 560px">
+  <div class="indicador mb-2" style="font-size: 4rem">404</div>
+  <h1 class="titulo-pagina mb-2">Página no encontrada</h1>
+  <p class="texto-suave">La dirección no existe o el registro fue eliminado.</p>
+  <a href="{% url 'inicio' %}" class="btn btn-ucc">Volver al inicio</a>
+</div>
+{% endblock %}
+{% block publico %}
+<div class="container py-5 text-center">
+  <h1>Página no encontrada</h1>
+  <a href="{% url 'login' %}">Iniciar sesión</a>
+</div>
+{% endblock %}

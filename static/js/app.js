@@ -98,6 +98,12 @@ $$("select[data-autoenviar]").forEach((select) =>
   select.addEventListener("change", () => select.form.requestSubmit())
 );
 
+// Buscadores de reportes: envían el filtro 500 ms después de dejar de escribir
+$$("input[data-buscar-auto]").forEach((campo) => {
+  campo.addEventListener("input", retrasar(() => campo.form.requestSubmit(), 500));
+  if (campo.value) { campo.focus(); campo.setSelectionRange(campo.value.length, campo.value.length); }
+});
+
 /* ------------------------------------------- 4. validación del cliente */
 const EXTENSIONES = { ".pdf": true, ".jpg": true, ".jpeg": true, ".png": true };
 
@@ -127,8 +133,18 @@ function validarArchivo(campo) {
   }
 }
 
+function validarRangoFechas(campo) {
+  // <input data-despues-de="id_otro">: la fecha no puede ser anterior a la del otro campo
+  const otro = document.getElementById(campo.dataset.despuesDe);
+  campo.setCustomValidity("");
+  if (otro && campo.value && otro.value && campo.value < otro.value) {
+    campo.setCustomValidity("La fecha de fin no puede ser anterior a la de inicio.");
+  }
+}
+
 function pintarEstado(campo) {
   if (campo.type === "file") validarArchivo(campo);
+  if (campo.dataset.despuesDe) validarRangoFechas(campo);
   const contenedor = campo.closest(".mb-3") || campo.parentElement;
   let caja = $(".invalid-feedback", contenedor);
   if (!caja) {

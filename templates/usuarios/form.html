@@ -3,7 +3,7 @@
 {% block contenido %}
 <a href="{% url 'usuarios:lista' %}" class="small">← Usuarios</a>
 <h1 class="titulo-pagina mt-1 mb-3">{% if object %}Editar a {{ object.nombre_completo }}{% else %}Nuevo usuario{% endif %}</h1>
-<form method="post" class="tarjeta p-4" style="max-width: 760px" novalidate>
+<form method="post" class="tarjeta p-4" style="max-width: 760px" novalidate data-validar>
   {% csrf_token %}
   {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors|join:" " }}</div>{% endif %}
   <div class="row">
