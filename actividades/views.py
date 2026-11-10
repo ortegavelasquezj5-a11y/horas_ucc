@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views import View
-from django.views.generic import CreateView, ListView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
 from usuarios.permisos import EstudianteMixin, GestorActividadesMixin
 
@@ -14,6 +15,11 @@ from .forms import ActividadForm
 from .models import Actividad, Inscripcion, TipoActividad
 
 Estado = Actividad.Estado
+
+
+def es_fetch(request):
+    """True si la petición viene del fetch() del frontend (static/js/app.js)."""
+    return request.headers.get("X-Requested-With") == "fetch"
 
 
 def _con_ocupados(consulta):
@@ -28,6 +34,10 @@ class CatalogoView(EstudianteMixin, ListView):
 
     template_name = "actividades/catalogo.html"
     paginate_by = 12
+
+    def get_template_names(self):
+        # La búsqueda en vivo solo pide la rejilla de tarjetas, no la página completa
+        return ["actividades/_tarjetas.html"] if es_fetch(self.request) else [self.template_name]
 
     def get_queryset(self):
         consulta = _con_ocupados(
@@ -61,9 +71,14 @@ class InscribirView(EstudianteMixin, View):
         actividad = get_object_or_404(Actividad, pk=pk)
         try:
             services.inscribir(request.user, actividad)
-            messages.success(request, f"Te inscribiste en «{actividad.nombre}». "
-                                      "Te avisaremos cuando se registre tu asistencia.")
+            texto = (f"Te inscribiste en «{actividad.nombre}». "
+                     "Te avisaremos cuando se registre tu asistencia.")
+            if es_fetch(request):
+                return JsonResponse({"ok": True, "mensaje": texto})
+            messages.success(request, texto)
         except services.ReglaDeNegocioError as error:
+            if es_fetch(request):
+                return JsonResponse({"ok": False, "mensaje": str(error)}, status=400)
             messages.error(request, str(error))
         return redirect(request.POST.get("volver") or "actividades:catalogo")
 
@@ -75,8 +90,13 @@ class CancelarInscripcionView(EstudianteMixin, View):
         )
         try:
             services.cancelar_inscripcion(inscripcion, request.user)
-            messages.success(request, "Cancelaste tu inscripción. El cupo quedó libre.")
+            texto = "Cancelaste tu inscripción. El cupo quedó libre."
+            if es_fetch(request):
+                return JsonResponse({"ok": True, "mensaje": texto})
+            messages.success(request, texto)
         except services.ReglaDeNegocioError as error:
+            if es_fetch(request):
+                return JsonResponse({"ok": False, "mensaje": str(error)}, status=400)
             messages.error(request, str(error))
         return redirect(request.POST.get("volver") or "actividades:catalogo")
 
@@ -105,7 +125,8 @@ class GestionView(GestorActividadesMixin, ListView):
             a.puede_editar = a.estado in (Estado.BORRADOR, Estado.PUBLICADA) and not empezo
             a.puede_publicar = a.estado == Estado.BORRADOR and not empezo
             a.puede_asistencia = a.estado in (Estado.PUBLICADA, Estado.FINALIZADA) and empezo
-            a.puede_cancelar = a.estado in (Estado.BORRADOR, Estado.PUBLICADA)
+            a.puede_cancelar = a.estado == Estado.PUBLICADA
+            a.puede_eliminar = a.estado == Estado.BORRADOR and a.ocupados == 0
             a.pendiente_asistencia = a.estado == Estado.PUBLICADA and empezo
         contexto.update(estados=Estado.choices, estado=self.estado)
         return contexto
@@ -170,6 +191,33 @@ class PublicarView(_AccionActividadView):
 class CancelarActividadView(_AccionActividadView):
     accion = "cancelar_actividad"
     mensaje = "Actividad cancelada. Se avisó a los inscritos."
+
+
+class ActividadDeleteView(GestorActividadesMixin, DeleteView):
+    """Elimina de la BD una actividad en borrador (nunca publicada, sin inscritos).
+
+    Las publicadas no se borran: se cancelan, para no perder el historial de horas.
+    """
+
+    model = Actividad
+    success_url = reverse_lazy("actividades:gestion")
+
+    def get_object(self, queryset=None):
+        actividad = super().get_object(queryset)
+        if not services.puede_gestionar(self.request.user, actividad):
+            raise PermissionDenied("Esta actividad está a cargo de otro líder.")
+        if actividad.estado != Estado.BORRADOR or actividad.inscripciones.exists():
+            raise PermissionDenied("Solo se eliminan actividades en borrador y sin inscritos.")
+        return actividad
+
+    def get(self, request, *args, **kwargs):
+        return redirect("actividades:gestion")
+
+    def form_valid(self, form):
+        nombre = self.object.nombre
+        respuesta = super().form_valid(form)
+        messages.success(self.request, f"Actividad «{nombre}» eliminada.")
+        return respuesta
 
 
 class AsistenciaView(GestorActividadesMixin, TemplateView):

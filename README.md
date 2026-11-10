@@ -7,6 +7,29 @@ Plataforma web para registrar, controlar y hacer seguimiento a las horas que los
 actividades académicas, investigativas, culturales, deportivas y de bienestar. Cada estudiante ve en todo
 momento cuántas horas lleva y cuántas le faltan para la meta de su programa.
 
+## Tecnologías
+
+| Capa | Tecnología |
+|---|---|
+| Backend | Python 3.10+, Django 5 (arquitectura MVT), Django REST Framework |
+| Base de datos | MySQL (XAMPP) · SQLite opcional para pruebas |
+| Frontend | HTML5 semántico, CSS3 propio (`static/css/estilos.css`) sobre Bootstrap 5, JavaScript (ES2020) |
+| Gráficas | Chart.js 4 (incluido en `static/vendor/`, funciona sin internet) |
+| Reportes | openpyxl (Excel) · constancia imprimible a PDF |
+
+## Avance de la Semana 4 (Frontend interactivo)
+
+| Requisito | Dónde está |
+|---|---|
+| Eventos y lógica en JavaScript | `static/js/app.js` |
+| Validación en el cliente | Soporte de horas (tipo y tamaño del archivo, horas 0,5–40, fecha no futura) y revisión de Bienestar (motivo obligatorio al rechazar o ajustar) |
+| Fetch API / AJAX | Catálogo: búsqueda en vivo, filtro por tipo y paginación sin recargar; inscribirse y cancelar sin recargar |
+| Renderizado dinámico desde el backend | El catálogo devuelve la plantilla parcial `_tarjetas.html`; el dashboard recibe los datos con `json_script` |
+| Dashboard con gráficas | `static/js/dashboard.js`: horas por tipo, por mes, cumplimiento de la meta y promedio vs. meta por programa |
+| CRUD completo (incluye eliminar) | Las actividades en borrador se eliminan de la BD; las publicadas se cancelan para no perder el historial |
+| Experiencia de usuario | Modal de confirmación, avisos flotantes, animaciones al hacer scroll, diseño adaptado a celular, respeta `prefers-reduced-motion` |
+| Pruebas | 60 pruebas automáticas (`python manage.py test`) |
+
 ## Avance de la Semana 3 (Desarrollo)
 
 | Actividad del plan | Qué quedó hecho |
@@ -18,8 +41,7 @@ momento cuántas horas lleva y cuántas le faltan para la meta de su programa.
 | Construir frontend | Pantallas del prototipo con Bootstrap 5, adaptadas a celular |
 | Integrar componentes | API REST, datos de demostración, instalador y 55 pruebas automáticas |
 
-**Para la Semana 4:** dashboard con gráficas, reportes en Excel y PDF, constancia en PDF, matriz de pruebas
-y manual de usuario.
+**Para la Semana 4:** ver la sección anterior.
 
 ## Requisitos
 

@@ -44,6 +44,10 @@
 {% else %}
   {% block publico %}{% endblock %}
 {% endif %}
+{# Contenedor de avisos flotantes (toasts) que crea app.js #}
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="avisos"></div>
 <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+{% block scripts %}{% endblock %}
 </body>
 </html>

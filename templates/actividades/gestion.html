@@ -9,7 +9,7 @@
   <a href="{% url 'actividades:crear' %}" class="btn btn-ucc">+ Nueva actividad</a>
 </div>
 <form method="get" class="d-flex gap-2 mb-3">
-  <select name="estado" class="form-select" style="max-width: 220px" aria-label="Filtrar por estado" onchange="this.form.submit()">
+  <select name="estado" class="form-select" style="max-width: 220px" aria-label="Filtrar por estado" data-autoenviar>
     <option value="">Todos los estados</option>
     {% for valor, texto in estados %}<option value="{{ valor }}" {% if estado == valor %}selected{% endif %}>{{ texto }}</option>{% endfor %}
   </select>
@@ -38,8 +38,11 @@
             {% if a.puede_publicar %}
               <form method="post" action="{% url 'actividades:publicar' a.pk %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-outline-ucc">Publicar</button></form>
             {% endif %}
+            {% if a.puede_eliminar %}
+              <form method="post" action="{% url 'actividades:eliminar' a.pk %}" class="d-inline" data-confirmar="¿Eliminar definitivamente «{{ a.nombre }}»? Esta acción no se puede deshacer." data-peligro>{% csrf_token %}<button class="btn btn-sm btn-danger">Eliminar</button></form>
+            {% endif %}
             {% if a.puede_cancelar %}
-              <form method="post" action="{% url 'actividades:cancelar' a.pk %}" class="d-inline" onsubmit="return confirm('¿Cancelar la actividad? Se avisará a los inscritos.')">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Cancelar</button></form>
+              <form method="post" action="{% url 'actividades:cancelar' a.pk %}" class="d-inline" data-confirmar="¿Cancelar «{{ a.nombre }}»? Se avisará a los inscritos.">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Cancelar</button></form>
             {% endif %}
           </td>
         </tr>

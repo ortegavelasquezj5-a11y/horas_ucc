@@ -4,24 +4,52 @@ from horas import services
 from usuarios.models import Programa
 from usuarios.permisos import SeguimientoMixin
 
+from .services import indicadores
+
+
+def programa_elegido(request):
+    """El coordinador ve solo su programa; Bienestar y el administrador eligen."""
+    if request.user.es_coordinador:
+        return request.user.programa, []
+    programas = Programa.objects.all()
+    elegido = request.GET.get("programa", "")
+    return (programas.filter(pk=elegido).first() if elegido.isdigit() else None), programas
+
+
+class DashboardView(SeguimientoMixin, TemplateView):
+    """Indicadores generales y gráficas de participación (HU-12)."""
+
+    template_name = "reportes/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        programa, programas = programa_elegido(self.request)
+        datos = indicadores(programa)
+        # Datos para Chart.js (static/js/dashboard.js); se pasan con json_script
+        graficas = {
+            "porTipo": {"etiquetas": [t["nombre"] for t in datos["por_tipo"]],
+                        "valores": [float(t["valor"]) for t in datos["por_tipo"]]},
+            "porMes": {"etiquetas": [m["nombre"] for m in datos["por_mes"]],
+                       "valores": [float(m["valor"]) for m in datos["por_mes"]]},
+            "cumplimiento": {"etiquetas": [c["texto"] for c in datos["cumplimiento"]],
+                             "valores": [c["total"] for c in datos["cumplimiento"]]},
+            "porPrograma": {"etiquetas": [p["programa"] for p in datos["por_programa"]],
+                            "promedio": [float(p["promedio"]) for p in datos["por_programa"]],
+                            "meta": [p["meta"] for p in datos["por_programa"]]},
+        }
+        contexto.update(programa=programa, programas=programas, datos=datos, graficas=graficas)
+        return contexto
+
 
 class SeguimientoView(SeguimientoMixin, TemplateView):
-    """El coordinador ve su programa; Bienestar y el administrador eligen programa."""
+    """Estudiantes con sus horas y su estado de cumplimiento (HU-11)."""
 
     template_name = "reportes/seguimiento.html"
 
     def get_context_data(self, **kwargs):
         contexto = super().get_context_data(**kwargs)
-        usuario = self.request.user
         get = self.request.GET
-
-        if usuario.es_coordinador:
-            programa = usuario.programa
-            programas = []
-        else:
-            programas = Programa.objects.all()
-            elegido = get.get("programa", "")
-            programa = programas.filter(pk=elegido).first() if elegido.isdigit() else None
+        programa, programas = programa_elegido(self.request)
 
         semestre = get.get("semestre", "")
         filas = services.seguimiento(programa=programa, semestre=int(semestre) if semestre.isdigit() else None)

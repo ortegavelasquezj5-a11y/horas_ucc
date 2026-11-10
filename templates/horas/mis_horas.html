@@ -6,7 +6,7 @@
     <h1 class="titulo-pagina">Mis horas</h1>
     <p class="texto-suave mb-0">Así vas con el requisito de horas de bienestar para tu grado.</p>
   </div>
-  <button class="btn btn-ucc" disabled title="Disponible en la Semana 4">Descargar constancia (PDF)</button>
+    <a href="{% url 'horas:constancia' %}" class="btn btn-ucc">Descargar constancia (PDF)</a>
 </div>
 
 <section class="tarjeta p-4 mb-4">
@@ -47,7 +47,7 @@
       <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
         <h2 class="h5 fw-bold mb-0">Historial de actividades</h2>
         <form method="get">
-          <select name="tipo" class="form-select form-select-sm" aria-label="Filtrar por tipo" onchange="this.form.submit()">
+          <select name="tipo" class="form-select form-select-sm" aria-label="Filtrar por tipo" data-autoenviar>
             <option value="">Todos los tipos</option>
             {% for t in tipos %}<option value="{{ t.pk }}" {% if tipo == t.pk|stringformat:'s' %}selected{% endif %}>{{ t.nombre }}</option>{% endfor %}
           </select>

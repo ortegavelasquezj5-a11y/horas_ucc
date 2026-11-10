@@ -8,6 +8,9 @@
   --borde: #DDE3EA;
   --texto: #1B2430;
   --texto-suave: #5A6675;
+  --sombra: 0 1px 2px rgba(16, 36, 64, .06), 0 4px 14px rgba(16, 36, 64, .06);
+  --sombra-alta: 0 8px 28px rgba(16, 36, 64, .14);
+  --transicion: 180ms cubic-bezier(.2, .7, .3, 1);
 }
 
 body {
@@ -51,7 +54,10 @@ a { color: var(--ucc-azul); }
 }
 
 /* Tarjetas y botones */
-.tarjeta { background: #fff; border: 1px solid var(--borde); border-radius: 14px; }
+.tarjeta {
+  background: #fff; border: 1px solid var(--borde); border-radius: 14px;
+  box-shadow: var(--sombra); transition: transform var(--transicion), box-shadow var(--transicion);
+}
 .btn-ucc { background: var(--ucc-verde); color: #fff; font-weight: 600; }
 .btn-ucc:hover, .btn-ucc:focus { background: var(--ucc-verde-oscuro); color: #fff; }
 .btn-outline-ucc { border: 1px solid var(--ucc-azul); color: var(--ucc-azul); font-weight: 600; }
@@ -82,3 +88,75 @@ a { color: var(--ucc-azul); }
 .login-izquierda { background: var(--ucc-azul); color: #fff; }
 
 table.table th { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--texto-suave); }
+
+
+/* Dashboard (Semana 4) */
+.indicador { font-size: 2rem; font-weight: 700; color: var(--ucc-azul); line-height: 1.2; }
+.cumplimiento { display: flex; height: 34px; border-radius: 8px; overflow: hidden; }
+.tramo { display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff; min-width: 40px; }
+.tramo-cumple { background: var(--ucc-verde); }
+.tramo-en-progreso { background: #4A7AB0; }
+.tramo-en-riesgo { background: #B42318; }
+
+/* ============================================================
+   Semana 4 · identidad visual, animaciones y soporte del JS
+   ============================================================ */
+
+/* Barra lateral con degradado y acento verde en la opción activa */
+.barra-lateral { background: linear-gradient(180deg, var(--ucc-azul) 0%, var(--ucc-azul-oscuro) 100%); }
+.barra-lateral .nav-link, .offcanvas-menu .nav-link { transition: background var(--transicion), padding-left var(--transicion); }
+.barra-lateral .nav-link:hover, .offcanvas-menu .nav-link:hover { padding-left: 16px; }
+.barra-lateral .nav-link.activo, .offcanvas-menu .nav-link.activo { box-shadow: inset 3px 0 0 var(--ucc-verde); }
+
+/* Títulos con subrayado de marca */
+.titulo-pagina { position: relative; padding-bottom: .35rem; margin-bottom: .5rem; }
+.titulo-pagina::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 48px; height: 4px; border-radius: 4px;
+  background: linear-gradient(90deg, var(--ucc-verde), var(--ucc-azul));
+}
+
+/* Tarjetas: aparición al hacer scroll (la clase la pone app.js) */
+.tarjeta.animada { opacity: 0; transform: translateY(12px); }
+.tarjeta.animada.visible { opacity: 1; transform: none; transition: opacity .45s ease, transform .45s ease, box-shadow var(--transicion); }
+
+/* Tarjeta de actividad: se eleva al pasar el mouse */
+.tarjeta-actividad { border-top: 4px solid var(--ucc-verde); }
+.tarjeta-actividad:hover { transform: translateY(-4px); box-shadow: var(--sombra-alta); }
+.tarjeta-actividad .progress { height: 8px; }
+
+/* Botones */
+.btn { transition: transform var(--transicion), box-shadow var(--transicion), background var(--transicion); }
+.btn:active:not(:disabled) { transform: scale(.97); }
+.btn-ucc:hover { box-shadow: 0 4px 12px rgba(0, 132, 61, .30); }
+.chip-tipo { transition: all var(--transicion); }
+
+/* Indicadores del dashboard */
+.indicador { background: linear-gradient(90deg, var(--ucc-azul), var(--ucc-verde)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Gráficas Chart.js */
+.caja-grafica { position: relative; height: 280px; }
+
+/* Catálogo mientras busca */
+#catalogo-resultados { transition: opacity var(--transicion); }
+#catalogo-resultados.cargando { opacity: .45; pointer-events: none; }
+
+/* Validación del cliente */
+.form-control:focus, .form-select:focus { border-color: var(--ucc-azul); box-shadow: 0 0 0 .2rem rgba(0, 56, 101, .15); }
+.form-control.is-invalid, .form-select.is-invalid { animation: sacudir .3s; }
+@keyframes sacudir { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+/* Modal y avisos */
+.modal-content { border: 0; border-radius: 16px; box-shadow: var(--sombra-alta); }
+.toast { border-radius: 12px; box-shadow: var(--sombra-alta); }
+
+/* Accesibilidad: sin animaciones si el usuario lo pide */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .tarjeta.animada { opacity: 1; transform: none; }
+}
+
+/* Impresión de la constancia */
+@media print {
+  .barra-lateral, .barra-superior, .toast-container, .btn { display: none !important; }
+  .tarjeta { box-shadow: none; }
+}

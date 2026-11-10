@@ -1,0 +1,41 @@
+{# Rejilla del catálogo. La usa catalogo.html y la búsqueda en vivo (fetch) #}
+<div class="row g-3">
+  {% for a in object_list %}
+  <div class="col-sm-6 col-xl-4">
+    <article class="tarjeta tarjeta-actividad p-3 h-100 d-flex flex-column gap-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="etiqueta-tipo">{{ a.tipo }}</span>
+        <span class="horas-actividad">{{ a.horas_otorga|floatformat:"-1" }} h</span>
+      </div>
+      <h2 class="h5 fw-bold mb-0">{{ a.nombre }}</h2>
+      <div class="small texto-suave">
+        <div>{{ a.fecha_inicio|date:"D d M · g:i a" }}</div>
+        <div>{{ a.lugar }}</div>
+        <div>Responsable: {{ a.responsable.nombre_completo }}</div>
+      </div>
+      <div class="small d-flex justify-content-between"><span>Cupos</span><span class="fw-semibold">{{ a.libres }} de {{ a.cupo }} libres</span></div>
+      <div class="progress" style="height: 8px" role="progressbar" aria-label="Ocupación" aria-valuenow="{{ a.ocupacion }}" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" style="width: {{ a.ocupacion }}%; background: var(--ucc-azul)"></div>
+      </div>
+      <div class="mt-auto pt-2">
+        {% if a.inscrito %}
+          <form method="post" action="{% url 'actividades:cancelar_inscripcion' a.pk %}" data-ajax data-confirmar="¿Cancelar tu inscripción en «{{ a.nombre }}»? El cupo quedará libre.">
+            {% csrf_token %}<input type="hidden" name="volver" value="{{ request.get_full_path }}">
+            <button class="btn btn-outline-success w-100">Inscrito · Cancelar inscripción</button>
+          </form>
+        {% elif a.libres > 0 %}
+          <form method="post" action="{% url 'actividades:inscribir' a.pk %}" data-ajax>
+            {% csrf_token %}<input type="hidden" name="volver" value="{{ request.get_full_path }}">
+            <button class="btn btn-ucc w-100">Inscribirme</button>
+          </form>
+        {% else %}
+          <button class="btn btn-secondary w-100" disabled>Sin cupos disponibles</button>
+        {% endif %}
+      </div>
+    </article>
+  </div>
+  {% empty %}
+  <div class="col-12"><div class="tarjeta p-4 text-center texto-suave">No hay actividades disponibles con esos filtros.</div></div>
+  {% endfor %}
+</div>
+{% include "partials/paginacion.html" %}

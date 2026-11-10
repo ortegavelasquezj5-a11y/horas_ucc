@@ -1,0 +1,90 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Constancia {{ constancia.codigo_verificacion }} · {{ estudiante.nombre_completo }}</title>
+  <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+  <style>
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: #E9EDF2; color: #1B2430; font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+    .hoja { background: #fff; max-width: 816px; margin: 24px auto; padding: 56px 64px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .encabezado { border-bottom: 3px solid #003865; padding-bottom: 14px; }
+    .logo { width: 48px; height: 48px; border-radius: 10px; background: #003865; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; }
+    .codigo { font-weight: 700; letter-spacing: .05em; }
+    table th { background: #EAF1F8; font-size: 13px; }
+    table td, table th { padding: 6px 10px !important; font-size: 14px; }
+    .firma { border-top: 1px solid #1B2430; width: 280px; padding-top: 6px; }
+    .barra-acciones { max-width: 816px; margin: 16px auto 0; }
+    @media print {
+      @page { size: letter; margin: 14mm; }
+      body { background: #fff; }
+      .no-imprimir { display: none !important; }
+      .hoja { box-shadow: none; margin: 0; padding: 0; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="barra-acciones d-flex flex-wrap gap-2 justify-content-between align-items-center px-3 no-imprimir">
+    <a href="{% url 'horas:mis_horas' %}" class="btn btn-outline-secondary">← Volver a Mis horas</a>
+    <button type="button" class="btn btn-success" onclick="window.print()">Guardar como PDF / Imprimir</button>
+  </div>
+  <p class="text-center small text-secondary mt-2 mb-0 no-imprimir">En la ventana de impresión elige el destino «Guardar como PDF».</p>
+
+  <main class="hoja">
+    <div class="encabezado d-flex justify-content-between align-items-center gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <span class="logo">H</span>
+        <div>
+          <div class="fw-bold fs-5">Horas UCC · Bienestar universitario</div>
+          <div class="text-secondary small">Universidad Cooperativa de Colombia · Campus Montería</div>
+        </div>
+      </div>
+      <div class="text-end small">
+        <div class="text-secondary">Código de verificación</div>
+        <div class="codigo fs-6">{{ constancia.codigo_verificacion }}</div>
+      </div>
+    </div>
+
+    <h1 class="text-center fw-bold my-4" style="font-size: 1.5rem; letter-spacing: .02em">CONSTANCIA DE HORAS DE BIENESTAR</h1>
+
+    <p style="text-align: justify; line-height: 1.7">
+      Bienestar universitario hace constar que <strong>{{ estudiante.nombre_completo|upper }}</strong>,
+      identificado(a) con código <strong>{{ estudiante.codigo }}</strong>, estudiante del programa de
+      <strong>{{ estudiante.programa }}</strong>{% if estudiante.semestre %} ({{ estudiante.semestre }}.º semestre){% endif %},
+      tiene <strong>{{ constancia.total_horas|floatformat:"-1" }} horas aprobadas</strong> en actividades académicas,
+      investigativas, culturales, deportivas y de bienestar, de las <strong>{{ resumen.meta }} horas</strong> que exige su programa
+      ({% if resumen.estado == "cumple" %}<strong>cumple la meta</strong>{% else %}le faltan {{ resumen.faltan|floatformat:"-1" }} horas{% endif %}),
+      con el siguiente detalle:
+    </p>
+
+    <table class="table table-bordered align-middle">
+      <thead><tr><th>Actividad</th><th>Tipo</th><th>Fecha</th><th class="text-end">Horas</th></tr></thead>
+      <tbody>
+      {% for r in registros %}
+        <tr><td>{{ r.nombre_actividad }}</td><td>{{ r.tipo }}</td><td>{{ r.fecha_actividad|date:"d/m/Y" }}</td><td class="text-end">{{ r.horas|floatformat:"-1" }} h</td></tr>
+      {% empty %}
+        <tr><td colspan="4" class="text-center text-secondary">Aún no tiene horas aprobadas.</td></tr>
+      {% endfor %}
+      <tr class="fw-bold"><td colspan="3" class="text-end">Total de horas aprobadas</td><td class="text-end">{{ constancia.total_horas|floatformat:"-1" }} h</td></tr>
+      </tbody>
+    </table>
+
+    <p class="mb-5" style="line-height: 1.7">
+      Solo se incluyen horas aprobadas por Bienestar universitario. Se expide en Montería el
+      {{ constancia.fecha_expedicion|date:"j" }} de {{ constancia.fecha_expedicion|date:"F"|lower }} de {{ constancia.fecha_expedicion|date:"Y" }}.
+    </p>
+
+    <div class="d-flex justify-content-between align-items-end gap-4 mt-5">
+      <div class="firma">
+        <div class="fw-bold">Bienestar universitario</div>
+        <div class="text-secondary small">Documento generado por el Sistema de Gestión de Horas</div>
+      </div>
+      <div class="text-end small text-secondary" style="max-width: 300px">
+        Verifique este documento en:<br>
+        <span class="text-dark text-break">{{ url_verificacion }}</span>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

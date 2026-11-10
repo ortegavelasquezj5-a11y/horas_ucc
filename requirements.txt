@@ -2,3 +2,4 @@ Django~=5.2.0            # versión LTS; acepta parches 5.2.x
 djangorestframework>=3.15
 PyMySQL>=1.1             # conector de MySQL en Python puro (no hay que compilar nada en Windows)
 python-decouple>=3.8     # lee la configuración del archivo .env
+openpyxl>=3.1             # reporte en Excel

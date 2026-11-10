@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block titulo %}Dashboard{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+  <div>
+    <h1 class="titulo-pagina">Dashboard de participación</h1>
+    <p class="texto-suave mb-0">{% if programa %}{{ programa.nombre }}{% else %}Todos los programas{% endif %} · datos al {% now "d/m/Y" %}</p>
+  </div>
+  {% if programas %}
+  <form method="get" class="d-flex gap-2">
+    <select name="programa" class="form-select" aria-label="Programa" data-autoenviar>
+      <option value="">Todos los programas</option>
+      {% for p in programas %}<option value="{{ p.pk }}" {% if programa == p %}selected{% endif %}>{{ p.nombre }}</option>{% endfor %}
+    </select>
+  </form>
+  {% endif %}
+</div>
+
+{# Indicadores #}
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3"><div class="tarjeta p-3 h-100">
+    <div class="small texto-suave">Horas aprobadas</div>
+    <div class="indicador">{{ datos.horas_aprobadas|floatformat:"-1" }}</div>
+  </div></div>
+  <div class="col-6 col-xl-3"><div class="tarjeta p-3 h-100">
+    <div class="small texto-suave">Estudiantes que cumplen la meta</div>
+    <div class="indicador">{{ datos.cumplen }} <span class="fs-6 texto-suave fw-normal">de {{ datos.total_estudiantes }} ({{ datos.porcentaje_cumplen }} %)</span></div>
+  </div></div>
+  <div class="col-6 col-xl-3"><div class="tarjeta p-3 h-100">
+    <div class="small texto-suave">Actividades realizadas</div>
+    <div class="indicador">{{ datos.actividades_realizadas }}</div>
+  </div></div>
+  <div class="col-6 col-xl-3"><div class="tarjeta p-3 h-100">
+    <div class="small texto-suave">Asistencia promedio</div>
+    <div class="indicador">{{ datos.asistencia_promedio }} %</div>
+    <div class="small texto-suave">{{ datos.por_aprobar }} solicitud{{ datos.por_aprobar|pluralize:"es" }} por aprobar</div>
+  </div></div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-6">
+    <section class="tarjeta p-4 h-100">
+      <h2 class="h5 fw-bold mb-3">Horas aprobadas por tipo de actividad</h2>
+      <div class="caja-grafica"><canvas id="grafica-tipo" role="img" aria-label="Horas aprobadas por tipo de actividad"></canvas></div>
+    </section>
+  </div>
+  <div class="col-lg-6">
+    <section class="tarjeta p-4 h-100">
+      <h2 class="h5 fw-bold mb-3">Horas aprobadas por mes</h2>
+      <div class="caja-grafica"><canvas id="grafica-mes" role="img" aria-label="Horas aprobadas en los últimos 6 meses"></canvas></div>
+    </section>
+  </div>
+  <div class="col-lg-5">
+    <section class="tarjeta p-4 h-100">
+      <h2 class="h5 fw-bold mb-3">Cumplimiento de la meta</h2>
+      <div class="caja-grafica"><canvas id="grafica-cumplimiento" role="img" aria-label="Estudiantes según cumplimiento de la meta"></canvas></div>
+    </section>
+  </div>
+  <div class="col-lg-7">
+    <section class="tarjeta p-4 h-100">
+      <h2 class="h5 fw-bold mb-3">Promedio de horas vs. meta por programa</h2>
+      <div class="caja-grafica"><canvas id="grafica-programa" role="img" aria-label="Promedio de horas por estudiante frente a la meta de cada programa"></canvas></div>
+    </section>
+  </div>
+</div>
+
+{# Tabla por programa #}
+<section class="tarjeta p-2 p-md-3">
+  <h2 class="h5 fw-bold px-2 pt-2">Resumen por programa</h2>
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Programa</th><th>Meta</th><th>Estudiantes</th><th>Horas aprobadas</th><th>Promedio por estudiante</th><th>Cumplen la meta</th></tr></thead>
+      <tbody>
+      {% for p in datos.por_programa %}
+        <tr>
+          <td class="fw-semibold">{{ p.programa }}</td>
+          <td>{{ p.meta }} h</td>
+          <td>{{ p.estudiantes }}</td>
+          <td>{{ p.horas|floatformat:"-1" }} h</td>
+          <td>{{ p.promedio|floatformat:"-1" }} h</td>
+          <td>{{ p.cumplen }} ({{ p.porcentaje }} %)</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6" class="text-center texto-suave py-4">No hay estudiantes activos.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+{{ graficas|json_script:"datos-graficas" }}
+<script src="{% static 'vendor/chartjs/chart.umd.min.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

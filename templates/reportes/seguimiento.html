@@ -31,6 +31,7 @@
     {% for clave, texto in estados.items %}<option value="{{ clave }}" {% if estado == clave %}selected{% endif %}>{{ texto }}</option>{% endfor %}
   </select>
   <button class="btn btn-outline-secondary">Filtrar</button>
+    <a href="{% url 'reportes:excel' %}?{{ request.GET.urlencode }}" class="btn btn-ucc ms-md-auto">Exportar a Excel</a>
 </form>
 
 <div class="tarjeta p-2 p-md-3">
@@ -59,5 +60,5 @@
     </table>
   </div>
 </div>
-<p class="small texto-suave mt-2">Exportar a Excel se agrega en la Semana 4, junto con el dashboard y los reportes.</p>
+
 {% endblock %}

@@ -143,3 +143,46 @@ class AsistenciaTests(BaseTests):
         actividad = self._actividad_pasada_con_inscritos()
         services.registrar_asistencia(actividad, self.bienestar, [self.e2.pk])
         self.assertEqual(RegistroHoras.objects.get().estudiante, self.e2)
+
+
+class FrontendAjaxTests(BaseTests):
+    """Semana 4: búsqueda en vivo, inscripción con fetch y eliminación real."""
+
+    FETCH = {"HTTP_X_REQUESTED_WITH": "fetch"}
+
+    def test_busqueda_en_vivo_devuelve_solo_las_tarjetas(self):
+        crear_actividad(self.lider)
+        self.client.force_login(self.e1)
+        respuesta = self.client.get("/actividades/?q=fútbol", **self.FETCH)
+        self.assertContains(respuesta, "Torneo de fútbol sala")
+        self.assertNotContains(respuesta, "<html")
+        self.assertTemplateUsed(respuesta, "actividades/_tarjetas.html")
+
+    def test_inscripcion_con_fetch_responde_json(self):
+        actividad = crear_actividad(self.lider, cupo=1)
+        self.client.force_login(self.e1)
+        respuesta = self.client.post(f"/actividades/{actividad.pk}/inscribir/", **self.FETCH)
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertTrue(respuesta.json()["ok"])
+        self.client.force_login(self.e2)
+        respuesta = self.client.post(f"/actividades/{actividad.pk}/inscribir/", **self.FETCH)
+        self.assertEqual(respuesta.status_code, 400)
+        self.assertIn("cupos", respuesta.json()["mensaje"])
+
+    def test_elimina_actividad_en_borrador(self):
+        actividad = crear_actividad(self.lider, estado=Actividad.Estado.BORRADOR)
+        self.client.force_login(self.lider)
+        self.client.post(f"/actividades/{actividad.pk}/eliminar/")
+        self.assertFalse(Actividad.objects.filter(pk=actividad.pk).exists())
+
+    def test_no_elimina_actividad_publicada(self):
+        actividad = crear_actividad(self.lider)
+        self.client.force_login(self.lider)
+        respuesta = self.client.post(f"/actividades/{actividad.pk}/eliminar/")
+        self.assertEqual(respuesta.status_code, 403)
+        self.assertTrue(Actividad.objects.filter(pk=actividad.pk).exists())
+
+    def test_otro_lider_no_elimina(self):
+        actividad = crear_actividad(self.lider, estado=Actividad.Estado.BORRADOR)
+        self.client.force_login(self.otro_lider)
+        self.assertEqual(self.client.post(f"/actividades/{actividad.pk}/eliminar/").status_code, 403)

@@ -1,0 +1,34 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verificar constancia · Horas UCC</title>
+  <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/estilos.css' %}?v=4" rel="stylesheet">
+</head>
+<body>
+  <main class="container py-5" style="max-width: 640px">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="logo">H</span><span class="fw-bold fs-5">Horas UCC · Verificación de constancias</span>
+    </div>
+    {% if constancia %}
+      <div class="tarjeta p-4">
+        <div class="alert alert-success fw-semibold">Constancia válida</div>
+        <dl class="row mb-0">
+          <dt class="col-sm-5 fw-normal texto-suave">Código</dt><dd class="col-sm-7 fw-bold">{{ constancia.codigo_verificacion }}</dd>
+          <dt class="col-sm-5 fw-normal texto-suave">Estudiante</dt><dd class="col-sm-7">{{ constancia.estudiante.nombre_completo }}</dd>
+          <dt class="col-sm-5 fw-normal texto-suave">Programa</dt><dd class="col-sm-7">{{ constancia.estudiante.programa }}</dd>
+          <dt class="col-sm-5 fw-normal texto-suave">Horas aprobadas</dt><dd class="col-sm-7">{{ constancia.total_horas|floatformat:"-1" }} h</dd>
+          <dt class="col-sm-5 fw-normal texto-suave">Fecha de expedición</dt><dd class="col-sm-7">{{ constancia.fecha_expedicion|date:"d/m/Y H:i" }}</dd>
+        </dl>
+      </div>
+    {% else %}
+      <div class="tarjeta p-4">
+        <div class="alert alert-danger fw-semibold mb-2">No existe una constancia con el código «{{ codigo }}».</div>
+        <p class="mb-0 texto-suave">Revisa que el código esté bien escrito. Si el problema sigue, comunícate con Bienestar universitario.</p>
+      </div>
+    {% endif %}
+  </main>
+</body>
+</html>

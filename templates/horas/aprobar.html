@@ -44,14 +44,14 @@
           Asistencia registrada por {{ seleccionado.inscripcion.actividad.responsable.nombre_completo }}
         {% endif %}
       </div>
-      <form method="post" action="{% url 'horas:revisar' seleccionado.pk %}" novalidate>
+      <form method="post" action="{% url 'horas:revisar' seleccionado.pk %}" novalidate data-revision data-horas-solicitadas="{{ seleccionado.horas|stringformat:'s' }}">
         {% csrf_token %}
         {% if form.non_field_errors %}<div class="alert alert-danger py-2">{{ form.non_field_errors|join:" " }}</div>{% endif %}
         {% include "partials/campo.html" with campo=form.horas %}
         {% include "partials/campo.html" with campo=form.motivo %}
         <div class="d-flex gap-2">
           <button name="accion" value="aprobar" class="btn btn-ucc flex-fill">Aprobar</button>
-          <button name="accion" value="rechazar" class="btn btn-outline-danger flex-fill">Rechazar</button>
+          <button name="accion" value="rechazar" class="btn btn-outline-danger flex-fill" data-confirmar="¿Rechazar estas horas? El estudiante recibirá el motivo." data-peligro>Rechazar</button>
         </div>
         <p class="small texto-suave mt-2 mb-0">Cada decisión queda registrada con fecha y responsable.</p>
       </form>

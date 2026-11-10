@@ -21,11 +21,13 @@ MENUS = {
         ("Aprobar horas", "horas:aprobar"),
         ("Actividades", "actividades:gestion"),
         ("Nueva actividad", "actividades:crear"),
+        ("Dashboard", "reportes:dashboard"),
         ("Seguimiento", "reportes:seguimiento"),
         ("Notificaciones", "notificaciones:lista"),
     ],
     Rol.COORDINADOR: [
         ("Seguimiento", "reportes:seguimiento"),
+        ("Dashboard", "reportes:dashboard"),
         ("Notificaciones", "notificaciones:lista"),
     ],
     Rol.ADMIN: [
@@ -33,6 +35,7 @@ MENUS = {
         ("Programas", "usuarios:programas"),
         ("Aprobar horas", "horas:aprobar"),
         ("Actividades", "actividades:gestion"),
+        ("Dashboard", "reportes:dashboard"),
         ("Seguimiento", "reportes:seguimiento"),
         ("Notificaciones", "notificaciones:lista"),
     ],

@@ -5,7 +5,7 @@
 <p class="texto-suave">¿Participaste en una actividad fuera de la plataforma? Sube el certificado y Bienestar revisará tus horas.</p>
 <div class="row g-4">
   <div class="col-lg-7">
-    <form method="post" enctype="multipart/form-data" class="tarjeta p-4" novalidate>
+    <form method="post" enctype="multipart/form-data" class="tarjeta p-4" novalidate data-validar>
       {% csrf_token %}
       {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors|join:" " }}</div>{% endif %}
       {% include "partials/campo.html" with campo=form.nombre_actividad %}

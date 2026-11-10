@@ -20,8 +20,13 @@ class SoporteForm(BootstrapFormMixin, forms.Form):
     soporte = forms.FileField(
         label="Soporte (certificado o constancia)",
         help_text="PDF, JPG o PNG · máximo 5 MB. Debe mostrar tu nombre, la fecha y la intensidad horaria.",
-        widget=forms.ClearableFileInput(attrs={"accept": ".pdf,.jpg,.jpeg,.png"}),
+        widget=forms.ClearableFileInput(attrs={"accept": ".pdf,.jpg,.jpeg,.png", "data-max-mb": "5"}),
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # El navegador también bloquea fechas futuras (validación en el cliente)
+        self.fields["fecha_actividad"].widget.attrs["max"] = timezone.localdate().isoformat()
 
     def clean_fecha_actividad(self):
         fecha = self.cleaned_data["fecha_actividad"]
