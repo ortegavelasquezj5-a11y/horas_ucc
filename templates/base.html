@@ -7,40 +7,58 @@
   <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/estilos.css' %}" rel="stylesheet">
 </head>
-<body>
+<body{% if user.is_authenticated %} class="con-portada rol-{{ user.rol }}"{% endif %}>
 {% if user.is_authenticated %}
-<div class="d-flex">
-  {# Menú lateral: visible en computador (lg o más) #}
-  <aside class="barra-lateral d-none d-lg-flex flex-column p-3 flex-shrink-0">
-    {% include "partials/menu.html" %}
-  </aside>
+{# Portada de fondo: imagen según el rol (static/img/portada-<rol>.jpg) con capa de color encima #}
+<div class="portada" aria-hidden="true"></div>
+{# Cabecera superior: marca, navegación por rol y usuario #}
+<header class="cabecera">
+  <div class="cabecera-interior">
+    <a class="marca" href="{% url 'inicio' %}">
+      <span class="logo">H</span>
+      <span class="marca-texto">Horas UCC<small>{{ user.get_rol_display }}</small></span>
+    </a>
 
-  <div class="flex-grow-1 min-vw-0" style="min-width: 0">
-    {# Barra superior: solo en celular y tableta #}
-    <nav class="navbar barra-superior d-lg-none px-3">
-      <a class="navbar-brand text-white fw-bold d-flex align-items-center gap-2" href="{% url 'inicio' %}">
-        <span class="logo">H</span> Horas UCC
-      </a>
-      <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuMovil" aria-controls="menuMovil">
-        Menú{% if notificaciones_sin_leer %} <span class="contador">{{ notificaciones_sin_leer }}</span>{% endif %}
-      </button>
+    <nav class="nav-principal d-none d-xl-flex" aria-label="Navegación principal">
+      {% for texto, url in menu_lateral %}
+        <a class="nav-principal-enlace {% if request.path == url %}activo{% endif %}" href="{{ url }}"{% if request.path == url %} aria-current="page"{% endif %}>
+          {{ texto }}{% if texto == "Notificaciones" and notificaciones_sin_leer %}<span class="contador">{{ notificaciones_sin_leer }}</span>{% endif %}
+        </a>
+      {% endfor %}
     </nav>
-    <div class="offcanvas offcanvas-start offcanvas-menu" tabindex="-1" id="menuMovil" aria-label="Menú">
-      <div class="offcanvas-header">
-        <span class="fw-bold">Menú</span>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
-      </div>
-      <div class="offcanvas-body d-flex flex-column">
-        {% include "partials/menu.html" %}
-      </div>
+
+    <div class="cabecera-usuario d-none d-xl-flex">
+      <span class="avatar" aria-hidden="true">{{ user.nombres|first }}{{ user.apellidos|first }}</span>
+      <span class="usuario-datos">
+        <span class="usuario-nombre">{{ user.nombre_completo }}</span>
+        <span class="usuario-detalle">{% if user.programa %}{{ user.programa }}{% else %}{{ user.correo }}{% endif %}</span>
+      </span>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="btn btn-sm btn-salir">Salir</button>
+      </form>
     </div>
 
-    <main class="p-3 p-md-4">
-      {% include "partials/mensajes.html" %}
-      {% block contenido %}{% endblock %}
-    </main>
+    <button class="btn btn-menu d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuMovil" aria-controls="menuMovil">
+      Menú{% if notificaciones_sin_leer %} <span class="contador">{{ notificaciones_sin_leer }}</span>{% endif %}
+    </button>
+  </div>
+</header>
+
+<div class="offcanvas offcanvas-end offcanvas-menu" tabindex="-1" id="menuMovil" aria-label="Menú">
+  <div class="offcanvas-header">
+    <span class="fw-bold">Menú</span>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column">
+    {% include "partials/menu.html" %}
   </div>
 </div>
+
+<main class="contenido">
+  {% include "partials/mensajes.html" %}
+  {% block contenido %}{% endblock %}
+</main>
 {% else %}
   {% block publico %}{% endblock %}
 {% endif %}

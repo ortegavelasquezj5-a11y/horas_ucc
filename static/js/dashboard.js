@@ -10,11 +10,12 @@
   if (!nodo || typeof Chart === "undefined") return;
   const datos = JSON.parse(nodo.textContent);
 
-  const AZUL = "#003865", VERDE = "#00843D", AMBAR = "#E0A100", ROJO = "#C0392B";
-  const PALETA = [AZUL, VERDE, "#2E86C1", AMBAR, "#7D3C98", "#16A085", "#CA6F1E"];
+  // Colores de la paleta del sitio (estilos.css): bosque, ocre, tinta y tonos de apoyo
+  const AZUL = "#0E7C9B", VERDE = "#3AAA35", AMBAR = "#D99A2B", ROJO = "#B54A3A";
+  const PALETA = ["#0E7C9B", "#3AAA35", "#0B4F66", "#5EC3DC", "#D99A2B", "#B54A3A", "#9FCB9C"];
 
   Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
-  Chart.defaults.color = "#5A6675";
+  Chart.defaults.color = "#586A74";
   Chart.defaults.plugins.legend.labels.usePointStyle = true;
 
   const horas = (v) => `${Number(v).toLocaleString("es-CO", { maximumFractionDigits: 1 })} h`;
@@ -36,7 +37,7 @@
   grafica("grafica-tipo", {
     type: "bar",
     data: { labels: datos.porTipo.etiquetas,
-            datasets: [{ data: datos.porTipo.valores, backgroundColor: PALETA, borderRadius: 6 }] },
+            datasets: [{ data: datos.porTipo.valores, backgroundColor: PALETA, borderRadius: 4 }] },
     options: { indexAxis: "y", maintainAspectRatio: false,
                plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => horas(c.raw) } } },
                scales: { x: { beginAtZero: true, ticks: { callback: horas } }, y: { grid: { display: false } } } },
@@ -46,7 +47,7 @@
   grafica("grafica-mes", {
     type: "line",
     data: { labels: datos.porMes.etiquetas,
-            datasets: [{ data: datos.porMes.valores, borderColor: AZUL, backgroundColor: "rgba(0,56,101,.12)",
+            datasets: [{ data: datos.porMes.valores, borderColor: AZUL, backgroundColor: "rgba(14,124,155,.10)",
                          fill: true, cubicInterpolationMode: "monotone", pointRadius: 4, pointHoverRadius: 7 }] },
     options: { maintainAspectRatio: false,
                plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => horas(c.raw) } } },
@@ -66,7 +67,7 @@
       ctx.font = `700 26px ${Chart.defaults.font.family}`;
       ctx.fillText(`${cumplen} %`, (left + right) / 2, (top + bottom) / 2 + 4);
       ctx.font = `12px ${Chart.defaults.font.family}`;
-      ctx.fillStyle = "#5A6675";
+      ctx.fillStyle = "#586A74";
       ctx.fillText("cumplen", (left + right) / 2, (top + bottom) / 2 + 22);
       ctx.restore();
     },
@@ -74,7 +75,7 @@
   grafica("grafica-cumplimiento", {
     type: "doughnut",
     data: { labels: datos.cumplimiento.etiquetas,
-            datasets: [{ data: datos.cumplimiento.valores, backgroundColor: [VERDE, AMBAR, ROJO], borderWidth: 2 }] },
+            datasets: [{ data: datos.cumplimiento.valores, backgroundColor: ["#3AAA35", AMBAR, ROJO], borderWidth: 2 }] },
     options: { maintainAspectRatio: false, cutout: "68%",
                plugins: { legend: { position: "bottom" },
                           tooltip: { callbacks: { label: (c) => ` ${c.label}: ${c.raw} estudiante(s)` } } } },
@@ -86,9 +87,9 @@
     type: "bar",
     data: { labels: datos.porPrograma.etiquetas,
             datasets: [
-              { label: "Promedio por estudiante", data: datos.porPrograma.promedio, backgroundColor: AZUL, borderRadius: 6 },
-              { label: "Meta del programa", data: datos.porPrograma.meta, backgroundColor: "rgba(0,132,61,.25)",
-                borderColor: VERDE, borderWidth: 2, borderRadius: 6 },
+              { label: "Promedio por estudiante", data: datos.porPrograma.promedio, backgroundColor: AZUL, borderRadius: 4 },
+              { label: "Meta del programa", data: datos.porPrograma.meta, backgroundColor: "rgba(58,170,53,.20)",
+                borderColor: "#3AAA35", borderWidth: 2, borderRadius: 4 },
             ] },
     options: { maintainAspectRatio: false,
                plugins: { tooltip: { callbacks: { label: (c) => ` ${c.dataset.label}: ${horas(c.raw)}` } } },

@@ -1,0 +1,19 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sesión expirada · Horas UCC</title>
+  <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/estilos.css' %}" rel="stylesheet">
+</head>
+<body class="d-flex align-items-center justify-content-center" style="min-height: 100vh">
+  {# Django muestra esta página cuando falla la verificación CSRF (formulario viejo o sesión cambiada) #}
+  <div class="tarjeta p-5 text-center" style="max-width: 560px">
+    <div class="indicador mb-2" style="font-size: 4rem">403</div>
+    <h1 class="titulo-pagina mb-2">La página expiró</h1>
+    <p class="texto-suave">Por seguridad, el formulario dejó de ser válido. Pasa cuando la página estuvo abierta mucho tiempo o se inició sesión en otra pestaña.</p>
+    <a href="{% url 'login' %}" class="btn btn-ucc">Volver a iniciar sesión</a>
+  </div>
+</body>
+</html>

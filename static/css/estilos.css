@@ -1,162 +1,468 @@
-/* Colores y estilos del prototipo (Semana 2) */
-:root {
-  --ucc-azul: #003865;
-  --ucc-azul-oscuro: #00264a;
-  --ucc-verde: #00843D;
-  --ucc-verde-oscuro: #006b31;
-  --fondo: #F4F6F9;
-  --borde: #DDE3EA;
-  --texto: #1B2430;
-  --texto-suave: #5A6675;
-  --sombra: 0 1px 2px rgba(16, 36, 64, .06), 0 4px 14px rgba(16, 36, 64, .06);
-  --sombra-alta: 0 8px 28px rgba(16, 36, 64, .14);
-  --transicion: 180ms cubic-bezier(.2, .7, .3, 1);
-}
-
-body {
-  background: var(--fondo);
-  color: var(--texto);
-  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
-}
-
-a { color: var(--ucc-azul); }
-
-/* Barra lateral (computador) y barra superior (celular) */
-.barra-lateral {
-  background: var(--ucc-azul);
-  color: #fff;
-  width: 250px;
-  min-height: 100vh;
-  position: sticky;
-  top: 0;
-}
-.barra-lateral .nav-link,
-.offcanvas-menu .nav-link {
-  color: #fff;
-  border-radius: 8px;
-  padding: 10px 12px;
-}
-.barra-lateral .nav-link:hover,
-.offcanvas-menu .nav-link:hover { background: rgba(255, 255, 255, 0.10); }
-.barra-lateral .nav-link.activo,
-.offcanvas-menu .nav-link.activo { background: rgba(255, 255, 255, 0.16); font-weight: 600; }
-.rol-titulo { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #C9D6E3; }
-.logo {
-  width: 36px; height: 36px; border-radius: 8px; background: var(--ucc-verde);
-  display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: #fff;
-}
-.barra-superior { background: var(--ucc-azul); }
-.offcanvas-menu { background: var(--ucc-azul); color: #fff; }
-
-.contador {
-  background: var(--ucc-verde); color: #fff; border-radius: 999px;
-  font-size: 12px; min-width: 22px; padding: 1px 7px; text-align: center;
-}
-
-/* Tarjetas y botones */
-.tarjeta {
-  background: #fff; border: 1px solid var(--borde); border-radius: 14px;
-  box-shadow: var(--sombra); transition: transform var(--transicion), box-shadow var(--transicion);
-}
-.btn-ucc { background: var(--ucc-verde); color: #fff; font-weight: 600; }
-.btn-ucc:hover, .btn-ucc:focus { background: var(--ucc-verde-oscuro); color: #fff; }
-.btn-outline-ucc { border: 1px solid var(--ucc-azul); color: var(--ucc-azul); font-weight: 600; }
-.btn-outline-ucc:hover { background: var(--ucc-azul); color: #fff; }
-
-.texto-suave { color: var(--texto-suave); }
-.titulo-pagina { font-size: 1.75rem; font-weight: 700; margin: 0; }
-
-/* Estados */
-.estado { display: inline-block; white-space: nowrap; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; }
-.estado-aprobada, .estado-activo, .estado-cumple, .estado-publicada { background: #E3F2E8; color: #14532D; }
-.estado-por_aprobar, .estado-borrador, .estado-en-progreso { background: #FFF4E5; color: #7A4100; }
-.estado-rechazada, .estado-cancelada, .estado-en-riesgo { background: #FDECEC; color: #9B1C1C; }
-.estado-inscrito, .estado-finalizada { background: #EAF1F8; color: var(--ucc-azul); }
-.estado-cancelado, .estado-inactivo { background: #F0F2F5; color: #3B4552; }
-
-.cifra { font-size: 2.6rem; font-weight: 700; line-height: 1; color: var(--ucc-azul); }
-.progress { height: 14px; border-radius: 999px; }
-.progress-bar { background: var(--ucc-verde); }
-
-.etiqueta-tipo { background: #EAF1F8; color: var(--ucc-azul); border-radius: 999px; padding: 3px 10px; font-size: 13px; font-weight: 600; }
-.horas-actividad { font-size: 1.35rem; font-weight: 700; color: var(--ucc-verde); }
-
-.notificacion-nueva { background: #F5F9FD; }
-.notificacion-nueva .mensaje { font-weight: 600; }
-
-/* Login */
-.login-izquierda { background: var(--ucc-azul); color: #fff; }
-
-table.table th { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--texto-suave); }
-
-
-/* Dashboard (Semana 4) */
-.indicador { font-size: 2rem; font-weight: 700; color: var(--ucc-azul); line-height: 1.2; }
-.cumplimiento { display: flex; height: 34px; border-radius: 8px; overflow: hidden; }
-.tramo { display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff; min-width: 40px; }
-.tramo-cumple { background: var(--ucc-verde); }
-.tramo-en-progreso { background: #4A7AB0; }
-.tramo-en-riesgo { background: #B42318; }
-
 /* ============================================================
-   Semana 4 · identidad visual, animaciones y soporte del JS
+   Horas UCC · hoja de estilos
+   Identidad: azul institucional UCC con verde de acento, portada con
+   imagen por rol y tarjetas flotantes. Tipografía local (funciona sin
+   internet): Montserrat, títulos en negrilla y textos secundarios delgados.
    ============================================================ */
 
-/* Barra lateral con degradado y acento verde en la opción activa */
-.barra-lateral { background: linear-gradient(180deg, var(--ucc-azul) 0%, var(--ucc-azul-oscuro) 100%); }
-.barra-lateral .nav-link, .offcanvas-menu .nav-link { transition: background var(--transicion), padding-left var(--transicion); }
-.barra-lateral .nav-link:hover, .offcanvas-menu .nav-link:hover { padding-left: 16px; }
-.barra-lateral .nav-link.activo, .offcanvas-menu .nav-link.activo { box-shadow: inset 3px 0 0 var(--ucc-verde); }
-
-/* Títulos con subrayado de marca */
-.titulo-pagina { position: relative; padding-bottom: .35rem; margin-bottom: .5rem; }
-.titulo-pagina::after {
-  content: ""; position: absolute; left: 0; bottom: 0; width: 48px; height: 4px; border-radius: 4px;
-  background: linear-gradient(90deg, var(--ucc-verde), var(--ucc-azul));
+@font-face {
+  font-family: "Montserrat";
+  src: url("../fonts/montserrat.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
 }
 
-/* Tarjetas: aparición al hacer scroll (la clase la pone app.js) */
-.tarjeta.animada { opacity: 0; transform: translateY(12px); }
-.tarjeta.animada.visible { opacity: 1; transform: none; transition: opacity .45s ease, transform .45s ease, box-shadow var(--transicion); }
+:root {
+  /* Paleta */
+  --papel: #F2F6F8;        /* fondo general */
+  --superficie: #FFFFFF;   /* tarjetas, tablas, formularios */
+  --tinta: #14262E;        /* texto principal */
+  --texto-suave: #586A74;  /* texto secundario */
+  --bosque: #0E7C9B;       /* color de marca y acciones */
+  --bosque-oscuro: #0A6178;
+  --bosque-claro: #E2F2F7;
+  --ocre: #3AAA35;         /* acento: horas, progreso, opción activa */
+  --ocre-claro: #FDF1DD;
+  --linea: #D8E3E8;
+  --barra: #0B4F66;        /* menú lateral */
 
-/* Tarjeta de actividad: se eleva al pasar el mouse */
-.tarjeta-actividad { border-top: 4px solid var(--ucc-verde); }
-.tarjeta-actividad:hover { transform: translateY(-4px); box-shadow: var(--sombra-alta); }
-.tarjeta-actividad .progress { height: 8px; }
+  /* Nombres antiguos (los usan algunas plantillas), apuntando a la nueva paleta */
+  --ucc-azul: #145E74;
+  --ucc-azul-oscuro: var(--barra);
+  --ucc-verde: var(--bosque);
+  --ucc-verde-oscuro: var(--bosque-oscuro);
+  --fondo: var(--papel);
+  --borde: var(--linea);
+  --texto: var(--tinta);
 
-/* Botones */
-.btn { transition: transform var(--transicion), box-shadow var(--transicion), background var(--transicion); }
-.btn:active:not(:disabled) { transform: scale(.97); }
-.btn-ucc:hover { box-shadow: 0 4px 12px rgba(0, 132, 61, .30); }
-.chip-tipo { transition: all var(--transicion); }
+  --radio: 10px;
+  --transicion: 160ms ease;
+  --fuente-titulos: "Montserrat", "Segoe UI", system-ui, sans-serif;
+  --fuente-texto: "Montserrat", "Segoe UI", system-ui, sans-serif;
 
-/* Indicadores del dashboard */
-.indicador { background: linear-gradient(90deg, var(--ucc-azul), var(--ucc-verde)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  /* Bootstrap toma estos valores */
+  --bs-body-font-family: var(--fuente-texto);
+  --bs-body-color: var(--tinta);
+  --bs-body-bg: var(--papel);
+  --bs-primary: var(--bosque);
+  --bs-primary-rgb: 14, 124, 155;
+  --bs-link-color: var(--bosque);
+  --bs-link-color-rgb: 14, 124, 155;
+  --bs-link-hover-color: var(--bosque-oscuro);
+  --bs-border-color: var(--linea);
+  --bs-secondary-color: var(--texto-suave);
+  --bs-focus-ring-color: rgba(58, 170, 53, .45);
+}
 
-/* Gráficas Chart.js */
+/* ---------------------------------------------------------- base */
+body {
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fuente-texto);
+  font-size: 15.5px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6,
+.titulo-pagina, .indicador, .cifra, .fs-5.fw-bold {
+  font-family: var(--fuente-titulos);
+  letter-spacing: -0.015em;
+}
+a { color: var(--bosque); text-underline-offset: 3px; }
+a:hover { color: var(--bosque-oscuro); }
+.texto-suave, .text-secondary { color: var(--texto-suave) !important; }
+::selection { background: var(--ocre-claro); }
+
+:focus-visible { outline: 2px solid var(--ocre); outline-offset: 2px; }
+
+.titulo-pagina {
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 .35rem;
+}
+
+/* ------------------------------------------------- cabecera superior */
+.cabecera {
+  position: sticky; top: 0; z-index: 1030;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--linea);
+}
+.cabecera-interior {
+  max-width: 1280px; margin: 0 auto;
+  height: 64px; padding: 0 24px;
+  display: flex; align-items: center; gap: 28px;
+}
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--tinta); flex-shrink: 0; }
+.marca:hover { color: var(--tinta); }
+.marca-texto { font-family: var(--fuente-titulos); font-weight: 700; font-size: 17px; line-height: 1.1; display: flex; flex-direction: column; }
+.marca-texto small { font-family: var(--fuente-texto); font-weight: 500; font-size: 12px; color: var(--texto-suave); }
+
+.logo {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: var(--bosque); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--fuente-titulos); font-weight: 800; font-size: 18px;
+  box-shadow: inset 0 -3px 0 var(--ocre);
+}
+
+/* Enlaces de la navegación: el activo se marca con una regla ocre abajo, a ras del borde */
+.nav-principal { align-self: stretch; align-items: stretch; gap: 4px; flex: 1; }
+.nav-principal-enlace {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 12px;
+  color: var(--texto-suave); text-decoration: none;
+  font-weight: 500; font-size: 14.5px; white-space: nowrap;
+  border-bottom: 3px solid transparent; margin-bottom: -1px;
+  transition: color var(--transicion), border-color var(--transicion);
+}
+.nav-principal-enlace:hover { color: var(--tinta); border-bottom-color: var(--linea); }
+.nav-principal-enlace.activo { color: var(--tinta); font-weight: 600; border-bottom-color: var(--ocre); }
+
+.cabecera-usuario { align-items: center; gap: 10px; margin-left: auto; }
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--bosque-claro); color: var(--bosque-oscuro);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px;
+}
+.usuario-datos { display: flex; flex-direction: column; line-height: 1.2; max-width: 190px; }
+.usuario-nombre, .usuario-detalle { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.usuario-nombre { font-weight: 600; font-size: 14px; }
+.usuario-detalle { font-size: 12px; color: var(--texto-suave); }
+.btn-salir { border: 1px solid var(--linea); color: var(--tinta); background: var(--superficie); }
+.btn-salir:hover { background: var(--papel); }
+.btn-menu { margin-left: auto; border: 1px solid var(--linea); background: var(--superficie); color: var(--tinta); }
+
+.contador {
+  background: var(--ocre); color: #fff;
+  border-radius: 999px; font-size: 11.5px; font-weight: 700;
+  min-width: 20px; padding: 1px 6px; text-align: center; line-height: 1.5;
+}
+
+/* Contenido centrado con ancho máximo */
+.contenido { max-width: 1280px; margin: 0 auto; padding: 36px 24px 64px; }
+@media (max-width: 575.98px) { .contenido { padding: 24px 16px 48px; } .cabecera-interior { padding: 0 16px; } }
+
+/* Menú del celular (panel lateral claro) */
+.offcanvas-menu { background: var(--superficie); color: var(--tinta); }
+.offcanvas-menu .nav-link {
+  color: var(--tinta); border-radius: 8px; padding: 10px 12px;
+  border-left: 3px solid transparent;
+}
+.offcanvas-menu .nav-link:hover { background: var(--papel); }
+.offcanvas-menu .nav-link.activo { background: var(--papel); font-weight: 600; border-left-color: var(--ocre); border-radius: 0 8px 8px 0; }
+.offcanvas-menu .logo { display: none; }
+.offcanvas-menu .rol-titulo { font-size: 13px; color: var(--texto-suave); }
+.offcanvas-menu .border-top { border-color: var(--linea) !important; }
+.offcanvas-menu .small { color: var(--texto-suave) !important; }
+.offcanvas-menu .btn-outline-light { border-color: var(--linea); color: var(--tinta); }
+
+/* Separación entre la cabecera de la página y su contenido */
+.titulo-pagina + p.texto-suave { max-width: 72ch; }
+
+/* --------------------------------------------------------- tarjetas */
+.tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  box-shadow: none;
+}
+/* La tarjeta de actividad lleva una regla ocre arriba: se lee como "esto suma horas" */
+.tarjeta-actividad { border-top: 3px solid var(--ocre); }
+.tarjeta-actividad:hover { border-color: #C5D3D0; border-top-color: var(--ocre); }
+
+/* app.js agrega estas clases; aquí se dejan sin efecto (sin animaciones de aparición) */
+.tarjeta.animada, .tarjeta.animada.visible { opacity: 1; transform: none; }
+
+/* ---------------------------------------------------------- botones */
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background var(--transicion), border-color var(--transicion), color var(--transicion);
+}
+.btn-ucc, .btn-primary {
+  background: var(--bosque); border-color: var(--bosque); color: #fff;
+}
+.btn-ucc:hover, .btn-ucc:focus, .btn-primary:hover, .btn-primary:focus {
+  background: var(--bosque-oscuro); border-color: var(--bosque-oscuro); color: #fff;
+}
+.btn-outline-ucc { border: 1px solid var(--bosque); color: var(--bosque); }
+.btn-outline-ucc:hover { background: var(--bosque); color: #fff; }
+.btn-outline-secondary {
+  border-color: var(--linea); color: var(--tinta); background: var(--superficie);
+}
+.btn-outline-secondary:hover {
+  background: var(--bosque-claro); border-color: #BFD3C6; color: var(--bosque-oscuro);
+}
+.btn-outline-success { border-color: var(--bosque); color: var(--bosque); }
+.btn-outline-success:hover { background: var(--bosque); color: #fff; }
+.btn-outline-light { border-color: rgba(255, 255, 255, .35); color: #E8EEE9; }
+.btn-outline-light:hover { background: rgba(255, 255, 255, .1); color: #fff; border-color: rgba(255, 255, 255, .5); }
+
+/* Filtros tipo "chip" (catálogo, notificaciones): el activo va en tinta */
+.btn.rounded-pill { padding: 5px 14px; font-weight: 500; }
+.btn.rounded-pill.btn-primary { background: var(--tinta); border-color: var(--tinta); }
+
+/* ------------------------------------------------------- formularios */
+.form-control, .form-select {
+  border-color: var(--linea);
+  border-radius: 8px;
+  background-color: var(--superficie);
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--bosque);
+  box-shadow: 0 0 0 3px rgba(14, 124, 155, .18);
+}
+.form-label { font-weight: 600; font-size: 14.5px; }
+.form-control.is-invalid, .form-select.is-invalid { animation: sacudir .25s; }
+@keyframes sacudir { 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+
+/* ------------------------------------------------------------ tablas */
+.table { --bs-table-bg: transparent; border-color: var(--linea); }
+table.table th {
+  font-size: 13px; font-weight: 600;
+  text-transform: none; letter-spacing: 0;
+  color: var(--texto-suave);
+  border-bottom-color: var(--linea);
+}
+.table > :not(caption) > * > * { padding-top: .7rem; padding-bottom: .7rem; }
+.table-hover > tbody > tr:hover > * { --bs-table-bg-state: var(--papel); }
+
+/* ----------------------------------------------------------- estados */
+.estado {
+  display: inline-block; white-space: nowrap;
+  padding: 2px 10px; border-radius: 6px;
+  font-size: 13px; font-weight: 600;
+}
+.estado-aprobada, .estado-activo, .estado-cumple, .estado-publicada { background: var(--bosque-claro); color: var(--bosque-oscuro); }
+.estado-por_aprobar, .estado-borrador, .estado-en-progreso { background: var(--ocre-claro); color: #7A4A06; }
+.estado-rechazada, .estado-cancelada, .estado-en-riesgo { background: #F8E6E2; color: #932F1F; }
+.estado-inscrito, .estado-finalizada { background: #E8EDF0; color: #2E4552; }
+.estado-cancelado, .estado-inactivo { background: #EEF0EC; color: #4A544D; }
+
+.etiqueta-tipo {
+  background: var(--papel); color: var(--tinta);
+  border: 1px solid var(--linea);
+  border-radius: 6px; padding: 2px 9px; font-size: 13px; font-weight: 600;
+}
+.horas-actividad { font-family: var(--fuente-titulos); font-size: 1.4rem; font-weight: 700; color: var(--bosque); }
+
+/* ------------------------------------------------------------ cifras */
+.cifra, .indicador {
+  font-weight: 700; line-height: 1.1; color: var(--tinta);
+  background: none; -webkit-background-clip: initial; background-clip: initial;
+}
+.cifra { font-size: 2.6rem; }
+.indicador { font-size: 2rem; }
+
+/* ------------------------------------------- barras de progreso (regla) */
+/* El elemento distintivo: la barra se dibuja como una regla graduada,
+   con una marca cada 10 %, como contar horas en una escala. */
+.progress {
+  height: 14px;
+  border-radius: 4px;
+  background-color: #E9ECE6;
+  background-image: repeating-linear-gradient(90deg,
+      transparent 0, transparent calc(10% - 1px),
+      rgba(23, 36, 28, .16) calc(10% - 1px), rgba(23, 36, 28, .16) 10%);
+  overflow: hidden;
+}
+.progress-bar {
+  background-color: var(--bosque);
+  border-radius: 4px 0 0 4px;
+  transform-origin: left center;
+  animation: llenar .7s cubic-bezier(.2, .7, .2, 1) both;
+}
+@keyframes llenar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* --------------------------------------------------- notificaciones */
+.notificacion-nueva { background: #F8FAF6; box-shadow: inset 3px 0 0 var(--ocre); }
+.notificacion-nueva .mensaje { font-weight: 600; }
+
+/* ------------------------------------------------------------ login */
+.login-izquierda {
+  background: var(--barra);
+  color: #F1F4F0;
+  background-image: repeating-linear-gradient(0deg,
+      transparent 0, transparent 47px, rgba(255, 255, 255, .05) 47px, rgba(255, 255, 255, .05) 48px);
+}
+.login-izquierda h1 { font-weight: 700; letter-spacing: -0.025em; }
+
+/* -------------------------------------------------------- dashboard */
 .caja-grafica { position: relative; height: 280px; }
+.cumplimiento { display: flex; height: 34px; border-radius: 8px; overflow: hidden; }
+.tramo { display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff; min-width: 40px; }
+.tramo-cumple { background: var(--bosque); }
+.tramo-en-progreso { background: #D99A2B; }
+.tramo-en-riesgo { background: #A8402D; }
 
-/* Catálogo mientras busca */
+/* ------------------------------------------- alertas, modal, avisos */
+.alert { border-radius: var(--radio); border-width: 1px; }
+.alert-success { background: var(--bosque-claro); border-color: #C3D8CA; color: var(--bosque-oscuro); }
+.alert-danger { background: #F8E6E2; border-color: #EBC7BF; color: #7E2718; }
+.alert-warning { background: var(--ocre-claro); border-color: #EFD6A8; color: #6B4105; }
+.alert-info { background: #E8EDF0; border-color: #CFD9DF; color: #2E4552; }
+
+.modal-content { border: 1px solid var(--linea); border-radius: 12px; box-shadow: 0 18px 50px rgba(19, 42, 31, .18); }
+.modal-title { font-family: var(--fuente-titulos); }
+.toast { border-radius: 10px; box-shadow: 0 10px 30px rgba(19, 42, 31, .2); }
+.text-bg-success { background-color: var(--bosque) !important; }
+.text-bg-danger { background-color: #A8402D !important; }
+
+.pagination { --bs-pagination-color: var(--tinta); --bs-pagination-border-color: var(--linea);
+  --bs-pagination-active-bg: var(--tinta); --bs-pagination-active-border-color: var(--tinta);
+  --bs-pagination-hover-bg: var(--bosque-claro); --bs-pagination-focus-box-shadow: 0 0 0 3px rgba(201,133,28,.3); }
+
+/* -------------------------------------------- catálogo mientras busca */
 #catalogo-resultados { transition: opacity var(--transicion); }
 #catalogo-resultados.cargando { opacity: .45; pointer-events: none; }
 
-/* Validación del cliente */
-.form-control:focus, .form-select:focus { border-color: var(--ucc-azul); box-shadow: 0 0 0 .2rem rgba(0, 56, 101, .15); }
-.form-control.is-invalid, .form-select.is-invalid { animation: sacudir .3s; }
-@keyframes sacudir { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+/* Subrayado de títulos: retirado en este diseño */
+.titulo-pagina::after { content: none; }
 
-/* Modal y avisos */
-.modal-content { border: 0; border-radius: 16px; box-shadow: var(--sombra-alta); }
-.toast { border-radius: 12px; box-shadow: var(--sombra-alta); }
-
-/* Accesibilidad: sin animaciones si el usuario lo pide */
+/* ---------------------------------------------------- accesibilidad */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .tarjeta.animada { opacity: 1; transform: none; }
 }
 
-/* Impresión de la constancia */
+/* --------------------------------------------- impresión (constancia) */
 @media print {
-  .barra-lateral, .barra-superior, .toast-container, .btn { display: none !important; }
-  .tarjeta { box-shadow: none; }
+  .cabecera, .offcanvas, .toast-container, .btn { display: none !important; }
+  body { background: #fff; }
+  .tarjeta { border-color: #ccc; }
 }
+
+/* Colores escritos directamente en algunas plantillas (azul del diseño anterior) → paleta nueva */
+[style*="#EAF1F8"] { background: #E9ECE6 !important; }
+[style*="#003865"] { color: var(--tinta) !important; }
+
+
+/* ============================================================
+   Portada por rol (inspirada en el ejemplo: franja teal con imagen,
+   menú blanco encima y el contenido "flotando" sobre la franja)
+   ============================================================ */
+.portada {
+  position: absolute; top: 0; left: 0; right: 0; height: 300px; z-index: 0;
+  border-radius: 0 0 48% 48% / 0 0 40px 40px;
+  background:
+    linear-gradient(115deg, rgba(7, 52, 70, .95) 0%, rgba(10, 97, 120, .86) 45%, rgba(26, 160, 191, .72) 100%),
+    var(--foto, none) center / cover no-repeat,
+    url("../img/campus.jpg") center 35% / cover no-repeat,
+    linear-gradient(115deg, #073446, #1AA0BF);
+  overflow: hidden;
+}
+/* Ilustración del rol, grande y tenue, a la derecha */
+.portada::after {
+  content: ""; position: absolute; right: max(24px, calc((100vw - 1280px) / 2 + 24px)); top: 70px;
+  width: 300px; height: 225px; opacity: .14;
+  background: var(--ilustracion) center / contain no-repeat;
+}
+.rol-estudiante    { --foto: url("../img/portada-estudiante.jpg");    --ilustracion: url("../img/rol-estudiante.svg"); }
+.rol-lider         { --foto: url("../img/portada-lider.jpg");         --ilustracion: url("../img/rol-lider.svg"); }
+.rol-bienestar     { --foto: url("../img/portada-bienestar.jpg");     --ilustracion: url("../img/rol-bienestar.svg"); }
+.rol-coordinador   { --foto: url("../img/portada-coordinador.jpg");   --ilustracion: url("../img/rol-coordinador.svg"); }
+.rol-administrador { --foto: url("../img/portada-administrador.jpg"); --ilustracion: url("../img/rol-administrador.svg"); }
+
+.con-portada { position: relative; }
+.con-portada .cabecera { position: relative; z-index: 2; background: transparent; border-bottom: 1px solid rgba(255, 255, 255, .14); }
+.con-portada .contenido { position: relative; z-index: 1; }
+
+/* Menú en blanco sobre la portada */
+.con-portada .marca, .con-portada .marca:hover { color: #fff; }
+.con-portada .marca-texto small { color: rgba(255, 255, 255, .72); }
+.con-portada .logo { background: #fff; color: var(--bosque); box-shadow: inset 0 -3px 0 var(--ocre); }
+.con-portada .nav-principal-enlace { color: rgba(255, 255, 255, .78); }
+.con-portada .nav-principal-enlace:hover { color: #fff; border-bottom-color: rgba(255, 255, 255, .35); }
+.con-portada .nav-principal-enlace.activo { color: #fff; border-bottom-color: #fff; }
+.con-portada .avatar { background: rgba(255, 255, 255, .16); color: #fff; }
+.con-portada .usuario-nombre { color: #fff; }
+.con-portada .usuario-detalle { color: rgba(255, 255, 255, .7); }
+.con-portada .btn-salir, .con-portada .btn-menu { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .45); }
+.con-portada .btn-salir:hover, .con-portada .btn-menu:hover { background: rgba(255, 255, 255, .12); color: #fff; }
+
+/* Título y descripción de la página, en blanco sobre la portada */
+.con-portada .contenido { padding-top: 40px; }
+.con-portada .titulo-pagina { color: #fff; font-size: clamp(1.8rem, 3vw, 2.5rem); }
+.con-portada .titulo-pagina ~ p, .con-portada .titulo-pagina ~ .texto-suave { color: rgba(255, 255, 255, .82) !important; }
+.con-portada .tarjeta .titulo-pagina { color: var(--tinta); font-size: 1.75rem; }
+.con-portada .tarjeta .titulo-pagina ~ p { color: var(--texto-suave) !important; }
+
+/* Botón principal sobre la portada: blanco, como en el ejemplo */
+.con-portada .contenido > .d-flex .btn-ucc,
+.con-portada .contenido > div:first-of-type > .btn-ucc { background: #fff; border-color: #fff; color: var(--bosque-oscuro); }
+.con-portada .contenido > .d-flex .btn-ucc:hover { background: #E9F5F1; }
+
+/* Tarjetas con algo de sombra para "flotar" sobre la franja */
+.con-portada .tarjeta { box-shadow: 0 1px 2px rgba(11, 79, 102, .05), 0 8px 24px rgba(11, 79, 102, .08); }
+
+@media (max-width: 575.98px) {
+  .portada { height: 260px; }
+  .portada::after { display: none; }
+}
+
+/* Login con la misma portada */
+.login-izquierda {
+  background:
+    linear-gradient(150deg, rgba(8, 52, 49, .93), rgba(15, 107, 92, .78)),
+    url("../img/portada-login.jpg") center / cover no-repeat,
+    linear-gradient(150deg, #08332F, #0F6B5C);
+  position: relative; overflow: hidden;
+}
+.login-izquierda::after {
+  content: ""; position: absolute; right: -40px; bottom: 40px; width: 420px; height: 315px;
+  background: url("../img/rol-estudiante.svg") center / contain no-repeat; opacity: .12;
+}
+.login-izquierda > * { position: relative; z-index: 1; }
+.login-izquierda .logo { background: #fff; color: var(--bosque); }
+
+
+/* ============================================================
+   Ajustes finales: azul UCC + verde, Montserrat con contraste de pesos
+   ============================================================ */
+body { font-weight: 400; font-size: 15px; }
+h1, h2, h3, .h1, .h2, .h3, .titulo-pagina { font-weight: 800; letter-spacing: -0.02em; }
+h4, h5, h6, .h4, .h5, .h6 { font-weight: 700; letter-spacing: -0.01em; }
+.cifra, .indicador { font-weight: 800; }
+/* Textos secundarios más delgados */
+.texto-suave, .text-secondary, .small.texto-suave, .titulo-pagina ~ p { font-weight: 300; }
+.form-label, table.table th, .estado, .etiqueta-tipo { font-weight: 600; }
+.btn { font-weight: 600; }
+
+/* Verde institucional como acento */
+.contador { background: #2E8B2A; color: #fff; }
+.nav-principal-enlace.activo { border-bottom-color: var(--ocre); }
+.con-portada .nav-principal-enlace.activo { border-bottom-color: var(--ocre); }
+.con-portada .logo { box-shadow: inset 0 -3px 0 var(--ocre); }
+.estado-aprobada, .estado-activo, .estado-cumple, .estado-publicada { background: #E6F4E4; color: #256B21; }
+.notificacion-nueva { box-shadow: inset 3px 0 0 var(--ocre); }
+.tramo-cumple { background: #3AAA35; }
+
+/* ------------------------------------------------------------ login
+   Foto de la universidad en toda la pantalla, capa azul encima (más oscura
+   a la izquierda para leer el texto) y el formulario en una tarjeta flotante */
+.login-fondo {
+  background:
+    linear-gradient(100deg, rgba(6, 45, 62, .93) 0%, rgba(10, 97, 120, .80) 45%, rgba(14, 124, 155, .45) 100%),
+    url("../img/portada-login.jpg") center / cover no-repeat,
+    #0B4F66;
+}
+.login-fondo .login-izquierda { background: transparent; }
+.login-fondo .login-izquierda::after { display: none; }
+.login-fondo .login-izquierda h1 { font-weight: 800; font-size: clamp(2rem, 4vw, 3rem) !important; line-height: 1.1; }
+.login-fondo .login-izquierda p { font-weight: 300; }
+.login-fondo .tarjeta {
+  background: rgba(255, 255, 255, .97);
+  border: 0; border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(4, 30, 42, .35);
+}
+.login-fondo .tarjeta h2 { font-weight: 800; }
+.login-fondo .logo { background: #fff; color: var(--bosque); box-shadow: inset 0 -3px 0 var(--ocre); }
+
+/* Portada con foto: sin el dibujo del rol (sobra con la foto detrás).
+   Foto propia por rol (opcional): static/img/portada-<rol>.jpg.
+   Si no existe, se ve la foto del campus. */
+.portada::after { display: none; }
+/* Botones con borde que quedan sobre la portada: fondo blanco para que se vean */
+.con-portada .contenido > .d-flex .btn-outline-ucc { background: #fff; border-color: #fff; color: var(--bosque-oscuro); }
+.con-portada .contenido > .d-flex .btn-outline-ucc:hover { background: #E9F5F1; border-color: #E9F5F1; color: var(--bosque-oscuro); }
